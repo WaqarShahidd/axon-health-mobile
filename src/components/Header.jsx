@@ -71,7 +71,7 @@ const Header = ({ title }) => {
               fontFamily: "FiraSans-Bold",
             }}
           >
-            Today's {title}
+            {title}
           </Text>
           <AntDesign name="search1" size={24} color={colors.primary} />
         </View>

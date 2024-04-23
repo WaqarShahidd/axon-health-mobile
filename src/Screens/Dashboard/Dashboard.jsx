@@ -1,5 +1,6 @@
 import {
   Image,
+  ImageBackground,
   LayoutAnimation,
   ScrollView,
   StyleSheet,
@@ -8,7 +9,7 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { colors } from "../../theme/theme";
+import { colors, gradient } from "../../theme/theme";
 import { MaterialCommunityIcons, AntDesign, Entypo } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -18,30 +19,30 @@ import GoalCards from "../../components/GoalCards";
 import { useNavigation } from "@react-navigation/native";
 
 const Dashboard = () => {
-  const [fontsLoaded, fontError] = useFonts({
-    "FiraSans-R": require("../../../assets/fonts/FiraSans-Regular.ttf"),
-    "FiraSans-Bold": require("../../../assets/fonts/FiraSans-Bold.ttf"),
-  });
+  // const [fontsLoaded, fontError] = useFonts({
+  //   "FiraSans-R": require("../../../assets/fonts/FiraSans-Regular.ttf"),
+  //   "FiraSans-Bold": require("../../../assets/fonts/FiraSans-Bold.ttf"),
+  // });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded || fontError) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  // if (!fontsLoaded && !fontError) {
+  //   return null;
+  // }
 
-  useEffect(() => {
-    const hideSplashScreen = async () => {
-      if (fontsLoaded && !fontError) {
-        await SplashScreen.hideAsync();
-      }
-    };
+  // useEffect(() => {
+  //   const hideSplashScreen = async () => {
+  //     if (fontsLoaded && !fontError) {
+  //       await SplashScreen.hideAsync();
+  //     }
+  //   };
 
-    hideSplashScreen();
-  }, [fontsLoaded, fontError]);
+  //   hideSplashScreen();
+  // }, [fontsLoaded, fontError]);
 
   const [selectedButton, setSelectedButton] = useState("active");
 
@@ -77,7 +78,7 @@ const Dashboard = () => {
   const navigation = useNavigation();
   return (
     <View
-      onLayout={onLayoutRootView}
+      // onLayout={onLayoutRootView}
       style={{
         flex: 1,
         backgroundColor: colors.bgClr,
@@ -86,18 +87,11 @@ const Dashboard = () => {
     >
       <LinearGradient
         colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
-        style={{
-          height: 225,
-          width: 225,
-          position: "absolute",
-          top: -50,
-          borderRadius: 360,
-          right: -50,
-        }}
+        style={gradient}
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Goals" />
+        <Header title="Today's Goals" />
         <View
           style={{
             marginHorizontal: 20,
@@ -113,7 +107,7 @@ const Dashboard = () => {
                     ? styles.selectedButton
                     : styles.button
                 }
-                onPress={() => handleButtonPress("active")}
+                onPress={() => handleButtonPress(btn.value)}
               >
                 <Text
                   style={
@@ -201,57 +195,73 @@ const Dashboard = () => {
           </View>
 
           {/* Your Therapist */}
-          <View style={styles.box}>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "500",
-                lineHeight: 24,
-                color: colors.textClr,
-                fontFamily: "FiraSans-Bold",
-                textTransform: "uppercase",
-              }}
-            >
-              Your Therapist
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: 20,
-              }}
-            >
-              <Image
-                source={require("../../../assets/images/avatar.jpeg")}
+          <View style={{ justifyContent: "center" }}>
+            <View style={styles.box}>
+              <Text
                 style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 360,
-                  marginRight: 10,
-                }}
-              />
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  paddingVertical: 5,
+                  fontSize: 14,
+                  fontWeight: "500",
+                  lineHeight: 24,
+                  color: colors.textClr,
+                  fontFamily: "FiraSans-Bold",
+                  textTransform: "uppercase",
                 }}
               >
-                <Text
+                Your Therapist
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 10,
+                }}
+              >
+                <Image
+                  source={require("../../../assets/images/avatar.jpeg")}
                   style={{
-                    fontSize: 14,
-                    fontWeight: "500",
-                    lineHeight: 24,
-                    color: colors.textClr,
-                    fontFamily: "FiraSans-Bold",
-                    textTransform: "uppercase",
+                    width: 50,
+                    height: 50,
+                    borderRadius: 360,
+                    marginRight: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    paddingVertical: 5,
                   }}
                 >
-                  Your Therapist
-                </Text>
-                <Text style={styles.remainingText}>Primary Care Physician</Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "500",
+                      lineHeight: 24,
+                      color: colors.textClr,
+                      fontFamily: "FiraSans-Bold",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Your Therapist
+                  </Text>
+                  <Text style={styles.remainingText}>
+                    Primary Care Physician
+                  </Text>
+                </View>
               </View>
             </View>
+            <Image
+              source={require("../../../assets/icons/user-doctor1.png")}
+              style={{
+                flex: 1,
+                resizeMode: "contain", // or "cover"
+                justifyContent: "center",
+                position: "absolute",
+                right: 0,
+                zIndex: 0,
+                width: 135,
+              }}
+            />
           </View>
         </View>
       </ScrollView>
@@ -326,6 +336,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 18,
     marginTop: 20,
+    position: "relative",
   },
   boxText: {
     fontSize: 16,

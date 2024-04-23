@@ -15,6 +15,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import CustomBtn from "../../components/CustomBtn";
+import DetailScreenHeader from "../../components/DetailScreenHeader";
 
 const GoalDetails = () => {
   return (
@@ -24,15 +25,7 @@ const GoalDetails = () => {
         style={styles.gradient}
       />
 
-      <View style={styles.header}>
-        <AntDesign name="arrowleft" size={24} color={colors.secondary} />
-        <Text style={styles.headerText}>Goal Details</Text>
-        <FontAwesome6
-          name="ellipsis-vertical"
-          size={24}
-          color={colors.secondary}
-        />
-      </View>
+      <DetailScreenHeader title="Goal Details" />
 
       <Text style={styles.goalText}>
         Connect with someone in recovery on an emotional level
@@ -84,17 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 360,
     right: -50,
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.textClr,
-    fontFamily: "FiraSans-Bold",
-  },
+
   goalText: {
     fontSize: 24,
     fontWeight: "bold",

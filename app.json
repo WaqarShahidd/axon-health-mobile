@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "AxionHealthMobile",
-    "slug": "AxionHealthMobile",
+    "name": "axon-health-mobile",
+    "slug": "axon-health-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

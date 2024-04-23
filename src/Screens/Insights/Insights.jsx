@@ -36,7 +36,7 @@ const Insights = () => {
         }}
       />
 
-      <Header title="Insights" />
+      <Header title="Your Insights" />
 
       <View
         style={{

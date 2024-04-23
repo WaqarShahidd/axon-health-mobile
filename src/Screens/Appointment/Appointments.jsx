@@ -99,7 +99,7 @@ const Appointments = () => {
               Clear All
             </Text>
 
-            <DropDownPicker
+            {/* <DropDownPicker
               items={items}
               defaultValue={selectedValue}
               containerStyle={{ height: 40 }}
@@ -109,7 +109,7 @@ const Appointments = () => {
               }}
               dropDownStyle={{ backgroundColor: "#fafafa" }}
               onChangeItem={(item) => setSelectedValue(item.value)}
-            />
+            /> */}
           </View>
           <View
             style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}
@@ -131,7 +131,7 @@ const Appointments = () => {
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Appointments" />
+        <Header title="Today's Appointments" />
         <View
           style={{
             marginHorizontal: 20,

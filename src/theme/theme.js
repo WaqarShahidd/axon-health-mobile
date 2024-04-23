@@ -9,3 +9,12 @@ export const colors = {
 
   borderClr: "#EBEFF5",
 };
+
+export const gradient = {
+  height: 225,
+  width: 225,
+  position: "absolute",
+  top: -50,
+  borderRadius: 360,
+  right: -50,
+};
