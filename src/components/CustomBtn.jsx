@@ -3,9 +3,9 @@ import React from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { colors } from "../theme/theme";
 
-const CustomBtn = ({ text }) => {
+const CustomBtn = ({ text, onPress }) => {
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <Text style={styles.buttonText}>{text}</Text>
       <FontAwesome6 name="arrow-right-long" size={24} color="white" />
     </TouchableOpacity>

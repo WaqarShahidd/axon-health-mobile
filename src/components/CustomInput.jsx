@@ -20,6 +20,7 @@ export const CustomInput = ({
   noCap,
   Icon,
   iconName,
+  borderColor,
 }) => {
   const [focus, setfocus] = useState(false);
 
@@ -66,7 +67,11 @@ export const CustomInput = ({
           height: value === "" ? 50 : 70,
           backgroundColor: "white",
           borderWidth: focus ? 2 : 1,
-          borderColor: focus ? colors.primary : "#59595A",
+          borderColor: focus
+            ? colors.primary
+            : borderColor
+            ? borderColor
+            : "#59595A",
           borderRadius: 7,
           shadowColor: "#3bb247",
           shadowOffset: {
@@ -133,6 +138,76 @@ export const CustomInput = ({
           />
         </>
       </View>
+    </View>
+  );
+};
+
+export const CustomTextArea = ({
+  placeholder,
+  value,
+  setValue,
+  type,
+  defaultValue,
+  multi,
+  disable,
+  noCap,
+  borderColor,
+}) => {
+  const [focus, setfocus] = useState(false);
+
+  const handleTextChange = (inputText) => {
+    if (noCap) {
+      setValue(inputText);
+    } else {
+      setValue(inputText);
+    }
+  };
+
+  return (
+    <View style={{ marginTop: 20 }}>
+      <TextInput
+        placeholder={placeholder}
+        placeholderTextColor={"#000"}
+        value={value}
+        defaultValue={defaultValue}
+        onFocus={() => {
+          setfocus(true);
+        }}
+        onBlur={() => {
+          setfocus(false);
+        }}
+        onChangeText={handleTextChange}
+        keyboardType={type && type}
+        editable={disable ? false : true}
+        numberOfLines={10}
+        multiline={true}
+        returnKeyLabel="Done"
+        onSubmitEditing={() => {
+          Keyboard.dismiss();
+        }}
+        style={{
+          color: "#000",
+          padding: 16,
+          paddingTop: 16,
+          height: 110,
+          backgroundColor: "white",
+          borderWidth: focus ? 2 : 1,
+          borderColor: focus
+            ? colors.primary
+            : borderColor
+            ? borderColor
+            : "#59595A",
+          borderRadius: 7,
+          shadowColor: "#3bb247",
+          shadowOffset: {
+            width: 0,
+            height: 0,
+          },
+          shadowOpacity: focus ? 0.175 : 0,
+          shadowRadius: 8,
+          elevation: 1,
+        }}
+      />
     </View>
   );
 };

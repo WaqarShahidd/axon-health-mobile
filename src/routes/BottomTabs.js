@@ -1,5 +1,14 @@
-import { Image, Platform, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import React, { useRef, useState } from "react";
 import Dashboard from "../Screens/Dashboard/Dashboard";
 import {
   MaterialIcons,
@@ -14,10 +23,19 @@ import More from "../Screens/More/More";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../theme/theme";
+import Modal from "react-native-modal";
+import { moreOptions } from "../../assets/data/dummyData";
+import MoreModal from "../components/MoreModal";
 
 const Tab = createBottomTabNavigator();
 
 const BottomTabs = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const MoreScreen = () => {
+    return null;
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -83,7 +101,7 @@ const BottomTabs = () => {
                   style={{
                     fontSize: 12,
                     fontWeight: "500",
-                    fontFamily: "FiraSans-r",
+                    fontFamily: "FiraSans-R",
                     color: colors.secondary,
                     marginTop: 7.5,
                   }}
@@ -203,7 +221,7 @@ const BottomTabs = () => {
                   style={{
                     fontSize: 12,
                     fontWeight: "500",
-                    fontFamily: "FiraSans-r",
+                    fontFamily: "FiraSans-R",
                     color: colors.secondary,
                     marginTop: 7.5,
                   }}
@@ -263,7 +281,7 @@ const BottomTabs = () => {
                   style={{
                     fontSize: 12,
                     fontWeight: "500",
-                    fontFamily: "FiraSans-r",
+                    fontFamily: "FiraSans-R",
                     color: colors.secondary,
                     marginTop: 7.5,
                   }}
@@ -276,62 +294,14 @@ const BottomTabs = () => {
       />
       <Tab.Screen
         name="More"
-        component={More}
+        component={MoreScreen}
         options={{
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderTopWidth: 3,
-                  borderTopColor: colors.primary,
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/more.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    fontFamily: "FiraSans-Bold",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  More
-                </Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/more-o.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    fontFamily: "FiraSans-r",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  More
-                </Text>
-              </View>
-            ),
+          tabBarButton: () => (
+            <MoreModal
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+          ),
         }}
       />
     </Tab.Navigator>

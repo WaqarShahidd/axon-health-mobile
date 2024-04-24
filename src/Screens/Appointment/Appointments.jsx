@@ -41,7 +41,7 @@ const Appointments = () => {
     { title: "This Week", cardText: "Attend a group therapy session" },
   ];
 
-  const [filterModal, setfilterModal] = useState(true);
+  const [filterModal, setfilterModal] = useState(false);
 
   return (
     <View
@@ -56,7 +56,7 @@ const Appointments = () => {
         onBackdropPress={() => setfilterModal(false)}
         testID={"modal"}
         onSwipeComplete={this.close}
-        swipeDirection={["up", "left", "right", "down"]}
+        swipeDirection={["down"]}
         style={{
           justifyContent: "flex-end",
           margin: 0,

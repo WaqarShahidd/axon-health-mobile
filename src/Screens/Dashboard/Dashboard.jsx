@@ -19,30 +19,10 @@ import GoalCards from "../../components/GoalCards";
 import { useNavigation } from "@react-navigation/native";
 
 const Dashboard = () => {
-  // const [fontsLoaded, fontError] = useFonts({
-  //   "FiraSans-R": require("../../../assets/fonts/FiraSans-Regular.ttf"),
-  //   "FiraSans-Bold": require("../../../assets/fonts/FiraSans-Bold.ttf"),
-  // });
-
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded || fontError) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded, fontError]);
-
-  // if (!fontsLoaded && !fontError) {
-  //   return null;
-  // }
-
-  // useEffect(() => {
-  //   const hideSplashScreen = async () => {
-  //     if (fontsLoaded && !fontError) {
-  //       await SplashScreen.hideAsync();
-  //     }
-  //   };
-
-  //   hideSplashScreen();
-  // }, [fontsLoaded, fontError]);
+  const [fontsLoaded, fontError] = useFonts({
+    "FiraSans-R": require("../../../assets/fonts/FiraSans-Regular.ttf"),
+    "FiraSans-Bold": require("../../../assets/fonts/FiraSans-Bold.ttf"),
+  });
 
   const [selectedButton, setSelectedButton] = useState("active");
 
@@ -76,197 +56,201 @@ const Dashboard = () => {
   ];
 
   const navigation = useNavigation();
-  return (
-    <View
-      // onLayout={onLayoutRootView}
-      style={{
-        flex: 1,
-        backgroundColor: colors.bgClr,
-        paddingTop: "10%",
-      }}
-    >
-      <LinearGradient
-        colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
-        style={gradient}
-      />
+  if (!fontsLoaded && !fontError) {
+    return null;
+  } else {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: colors.bgClr,
+          paddingTop: "10%",
+        }}
+      >
+        <LinearGradient
+          colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
+          style={gradient}
+        />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Today's Goals" />
-        <View
-          style={{
-            marginHorizontal: 20,
-            marginTop: 20,
-          }}
-        >
-          {/* Goals Btn */}
-          <View style={styles.btnContainer}>
-            {toggleBtns.map((btn) => (
-              <TouchableOpacity
-                style={
-                  selectedButton === btn.value
-                    ? styles.selectedButton
-                    : styles.button
-                }
-                onPress={() => handleButtonPress(btn.value)}
-              >
-                <Text
+        <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+          <Header title="Today's Goals" />
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginTop: 20,
+            }}
+          >
+            {/* Goals Btn */}
+            <View style={styles.btnContainer}>
+              {toggleBtns.map((btn) => (
+                <TouchableOpacity
+                  key={btn.id}
                   style={
                     selectedButton === btn.value
-                      ? styles.selectedButtonText
-                      : styles.buttonText
+                      ? styles.selectedButton
+                      : styles.button
                   }
-                >
-                  {btn.text}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Accordions */}
-          <View>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>Today</Text>
-              <TouchableOpacity
-                style={styles.collapseButton}
-                onPress={toggleCollapse}
-              >
-                <Text style={styles.collapseButtonText}>
-                  {isCollapsed ? "Expand" : "Collapse"}
-                </Text>
-                <Entypo
-                  name={isCollapsed ? "chevron-up" : "chevron-down"}
-                  size={18}
-                  color={colors.primary}
-                />
-              </TouchableOpacity>
-            </View>
-            {!isCollapsed && (
-              <View>
-                {goalCardData.map(
-                  (goal, index) =>
-                    goal?.title === "Today" && (
-                      <View style={styles.box} key={index}>
-                        <Text style={styles.boxText}>{goal.cardText}</Text>
-                        <Text style={styles.remainingText}>
-                          2 remaining today
-                        </Text>
-                      </View>
-                    )
-                )}
-              </View>
-            )}
-          </View>
-          <View>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>This Week</Text>
-              <TouchableOpacity
-                style={styles.collapseButton}
-                onPress={toggleCollapse}
-              >
-                <Text style={styles.collapseButtonText}>
-                  {isCollapsed ? "Expand" : "Collapse"}
-                </Text>
-                <Entypo
-                  name={isCollapsed ? "chevron-up" : "chevron-down"}
-                  size={18}
-                  color={colors.primary}
-                />
-              </TouchableOpacity>
-            </View>
-            {!isCollapsed && (
-              <View>
-                {goalCardData.map(
-                  (goal, index) =>
-                    goal?.title !== "Today" && (
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate("GoalDetails")}
-                        style={styles.box}
-                        key={index}
-                      >
-                        <Text style={styles.boxText}>{goal.cardText}</Text>
-                        <Text style={styles.remainingText}>
-                          2 remaining today
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                )}
-              </View>
-            )}
-          </View>
-
-          {/* Your Therapist */}
-          <View style={{ justifyContent: "center" }}>
-            <View style={styles.box}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "500",
-                  lineHeight: 24,
-                  color: colors.textClr,
-                  fontFamily: "FiraSans-Bold",
-                  textTransform: "uppercase",
-                }}
-              >
-                Your Therapist
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 10,
-                }}
-              >
-                <Image
-                  source={require("../../../assets/images/avatar.jpeg")}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 360,
-                    marginRight: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    paddingVertical: 5,
-                  }}
+                  onPress={() => handleButtonPress(btn.value)}
                 >
                   <Text
+                    style={
+                      selectedButton === btn.value
+                        ? styles.selectedButtonText
+                        : styles.buttonText
+                    }
+                  >
+                    {btn.text}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Accordions */}
+            <View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Today</Text>
+                <TouchableOpacity
+                  style={styles.collapseButton}
+                  onPress={toggleCollapse}
+                >
+                  <Text style={styles.collapseButtonText}>
+                    {isCollapsed ? "Expand" : "Collapse"}
+                  </Text>
+                  <Entypo
+                    name={isCollapsed ? "chevron-up" : "chevron-down"}
+                    size={18}
+                    color={colors.primary}
+                  />
+                </TouchableOpacity>
+              </View>
+              {!isCollapsed && (
+                <View>
+                  {goalCardData.map(
+                    (goal, index) =>
+                      goal?.title === "Today" && (
+                        <View style={styles.box} key={index}>
+                          <Text style={styles.boxText}>{goal.cardText}</Text>
+                          <Text style={styles.remainingText}>
+                            2 remaining today
+                          </Text>
+                        </View>
+                      )
+                  )}
+                </View>
+              )}
+            </View>
+            <View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>This Week</Text>
+                <TouchableOpacity
+                  style={styles.collapseButton}
+                  onPress={toggleCollapse}
+                >
+                  <Text style={styles.collapseButtonText}>
+                    {isCollapsed ? "Expand" : "Collapse"}
+                  </Text>
+                  <Entypo
+                    name={isCollapsed ? "chevron-up" : "chevron-down"}
+                    size={18}
+                    color={colors.primary}
+                  />
+                </TouchableOpacity>
+              </View>
+              {!isCollapsed && (
+                <View>
+                  {goalCardData.map(
+                    (goal, index) =>
+                      goal?.title !== "Today" && (
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate("GoalDetails")}
+                          style={styles.box}
+                          key={index}
+                        >
+                          <Text style={styles.boxText}>{goal.cardText}</Text>
+                          <Text style={styles.remainingText}>
+                            2 remaining today
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                  )}
+                </View>
+              )}
+            </View>
+
+            {/* Your Therapist */}
+            <View style={{ justifyContent: "center" }}>
+              <View style={styles.box}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "500",
+                    lineHeight: 24,
+                    color: colors.textClr,
+                    fontFamily: "FiraSans-Bold",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Your Therapist
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 10,
+                  }}
+                >
+                  <Image
+                    source={require("../../../assets/images/avatar.jpeg")}
                     style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      lineHeight: 24,
-                      color: colors.textClr,
-                      fontFamily: "FiraSans-Bold",
-                      textTransform: "uppercase",
+                      width: 50,
+                      height: 50,
+                      borderRadius: 360,
+                      marginRight: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      paddingVertical: 5,
                     }}
                   >
-                    Your Therapist
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    Primary Care Physician
-                  </Text>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "500",
+                        lineHeight: 24,
+                        color: colors.textClr,
+                        fontFamily: "FiraSans-Bold",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Your Therapist
+                    </Text>
+                    <Text style={styles.remainingText}>
+                      Primary Care Physician
+                    </Text>
+                  </View>
                 </View>
               </View>
+              <Image
+                source={require("../../../assets/icons/user-doctor.png")}
+                style={{
+                  flex: 1,
+                  resizeMode: "contain", // or "cover"
+                  justifyContent: "center",
+                  position: "absolute",
+                  right: 0,
+                  zIndex: 0,
+                  width: 135,
+                }}
+              />
             </View>
-            <Image
-              source={require("../../../assets/icons/user-doctor1.png")}
-              style={{
-                flex: 1,
-                resizeMode: "contain", // or "cover"
-                justifyContent: "center",
-                position: "absolute",
-                right: 0,
-                zIndex: 0,
-                width: 135,
-              }}
-            />
           </View>
-        </View>
-      </ScrollView>
-    </View>
-  );
+        </ScrollView>
+      </View>
+    );
+  }
 };
 
 export default Dashboard;
