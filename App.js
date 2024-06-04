@@ -4,13 +4,20 @@ import Navigation from "./src/routes/Navigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { PaperProvider } from "react-native-paper";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
+import store, { persistor } from "./src/redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
   return (
     <PaperProvider>
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NavigationContainer>
+            <Navigation />
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </PaperProvider>
   );
 }

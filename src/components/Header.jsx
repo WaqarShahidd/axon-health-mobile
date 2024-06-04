@@ -1,13 +1,27 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { colors } from "../theme/theme";
 import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 const { fontScale } = Dimensions.get("window");
 
 const Header = ({ title }) => {
+  const { userData } = useSelector((state) => state.user);
   return (
-    <View style={{ paddingTop: "10%", marginHorizontal: 20 }}>
+    <View
+      style={{
+        paddingTop: Platform.OS === "android" ? "5%" : "10%",
+        marginHorizontal: 20,
+      }}
+    >
       <View
         style={{
           position: "relative",
@@ -17,16 +31,18 @@ const Header = ({ title }) => {
           borderRadius: 360,
         }}
       >
-        <Image
-          source={require("../../assets/images/avatar.jpeg")}
-          style={{
-            width: 75,
-            height: 75,
-            borderRadius: 360,
-            objectFit: "contain",
-          }}
-        />
-        <View
+        {userData?.avatar !== "" && (
+          <Image
+            source={{ uri: userData?.avatar }}
+            style={{
+              width: 75,
+              height: 75,
+              borderRadius: 360,
+              objectFit: "contain",
+            }}
+          />
+        )}
+        {/* <View
           style={{
             position: "absolute",
             bottom: 0,
@@ -41,7 +57,7 @@ const Header = ({ title }) => {
             size={15}
             color={colors.primary}
           />
-        </View>
+        </View> */}
       </View>
       <View>
         <Text

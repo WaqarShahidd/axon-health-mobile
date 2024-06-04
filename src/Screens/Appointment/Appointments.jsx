@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
@@ -14,6 +14,9 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import CustomBtn from "../../components/CustomBtn";
 import DropDownPicker from "react-native-dropdown-picker";
+import axios from "axios";
+import { BASE_URL } from "../../constants/config";
+import moment from "moment";
 
 const Appointments = () => {
   const navigation = useNavigation();
@@ -41,7 +44,32 @@ const Appointments = () => {
     { title: "This Week", cardText: "Attend a group therapy session" },
   ];
 
+  let currentDate = new Date();
+
   const [filterModal, setfilterModal] = useState(false);
+
+  const [loading, setloading] = useState(false);
+
+  const [allAppointments, setallAppointments] = useState([]);
+
+  const GetAppointments = async (e) => {
+    setloading(true);
+    await axios
+      .get(`${BASE_URL}/appointment/getAllAppointmentByPatientId`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setloading(false);
+        setallAppointments(res.data?.allAppointments);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
+  useEffect(() => {
+    GetAppointments();
+  }, []);
 
   return (
     <View
@@ -166,24 +194,67 @@ const Appointments = () => {
             <View style={styles.header}>
               <Text style={styles.headerText}>
                 {selectedButton === "active"
-                  ? "All Items (9)"
-                  : "History Assignments Items (20)"}
+                  ? `Active Appointments (${
+                      allAppointments?.filter((val) => {
+                        const appointmentDate = new Date(val?.date);
+
+                        return appointmentDate < currentDate;
+                      })?.length
+                    })`
+                  : `Past Appointments (${
+                      allAppointments?.filter((val) => {
+                        const appointmentDate = new Date(val?.date);
+
+                        return appointmentDate > currentDate;
+                      })?.length
+                    })`}
               </Text>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.collapseButton}
                 onPress={() => setfilterModal(true)}
               >
                 <Text style={styles.collapseButtonText}>Filters</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             <View>
-              {goalCardData.map((goal, index) => (
-                <View style={styles.box} key={index}>
-                  <Text style={styles.boxText}>{goal.cardText}</Text>
-                  <Text style={styles.remainingText}>2 remaining today</Text>
-                </View>
-              ))}
+              {allAppointments
+                ?.filter((val) => {
+                  const appointmentDate = new Date(val?.date);
+                  if (selectedButton === "active") {
+                    return appointmentDate < currentDate;
+                  } else {
+                    return appointmentDate > currentDate;
+                  }
+                })
+                ?.map((appoint, index) => (
+                  <View style={styles.box} key={index}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      {appoint?.doctorDetails?.avatar && (
+                        <Image
+                          source={{ uri: appoint?.doctorDetails?.avatar }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 360,
+                            marginRight: 10,
+                          }}
+                        />
+                      )}
+                      <Text style={styles.boxText}>
+                        {appoint?.doctorDetails?.name}
+                      </Text>
+                    </View>
+                    <Text style={styles.remainingText}>
+                      {moment(appoint?.date).format("DD MMM YYYY")}
+                    </Text>
+                  </View>
+                ))}
             </View>
           </View>
         </View>

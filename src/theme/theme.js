@@ -18,3 +18,10 @@ export const gradient = {
   borderRadius: 360,
   right: -50,
 };
+
+export const size = {
+  h1: 36,
+  h2: 24,
+  h3: 16,
+  h4: 14,
+};
