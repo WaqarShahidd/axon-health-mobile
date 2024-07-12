@@ -17,11 +17,11 @@ import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 
 const toggleBtns = [
-  { id: 1, text: "Active Assignments", value: "active" },
-  { id: 2, text: "History Assignments", value: "history" },
+  { id: 1, text: "Active Questions", value: "active" },
+  { id: 2, text: "Completed Questions", value: "history" },
 ];
 
-const Activities = () => {
+const Questions = () => {
   const navigation = useNavigation();
 
   const [selectedButton, setSelectedButton] = useState("active");
@@ -42,6 +42,7 @@ const Activities = () => {
       })
       .then((res) => {
         setloading(false);
+        setallQuestions(res.data?.assignedQuestion);
       })
       .catch((e) => {
         setloading(false);
@@ -66,7 +67,7 @@ const Activities = () => {
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Today’s Activities" />
+        <Header title="Questions" />
         <View
           style={{
             marginTop: 20,
@@ -124,7 +125,7 @@ const Activities = () => {
                 <Text
                   style={{
                     fontSize: 14,
-                    // fontFamily: "FiraSans_400Regular",
+                    fontFamily: "FiraSans-R",
                     color: colors.secondary,
                   }}
                   ellipsizeMode="tail"
@@ -154,51 +155,69 @@ const Activities = () => {
               <Text
                 style={{
                   fontSize: 16,
-                  // fontFamily: "FiraSans_700Bold",
+                  fontFamily: "FiraSans-Bold",
                   color: colors.textClr,
                 }}
               >
-                All Items ({draftItemData.length})
+                All Items ({allQuestions?.length})
               </Text>
-              <Text
+              {/* <Text
                 style={{
                   color: colors.primary,
                   fontSize: 14,
-                  // fontFamily: "FiraSans_400Regular",
+                  fontFamily: "FiraSans-R",
                 }}
               >
                 See All
-              </Text>
+              </Text> */}
             </View>
 
-            {draftItemData.map((item, index) => (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginVertical: 10,
-                  borderBottomColor: colors.borderClr,
-                  borderBottomWidth: 1,
-                  paddingBottom: 20,
-                }}
-                key={index}
-              >
-                <Image
+            {allQuestions
+              ?.filter((val) => {
+                if (selectedButton === "active") {
+                  return val?.status === "pending";
+                } else {
+                  return val?.status === "completed";
+                }
+              })
+              ?.map((item, index) => (
+                <View
+                  style={{
+                    marginVertical: 10,
+                    borderBottomColor: colors.borderClr,
+                    borderBottomWidth: 1,
+                    paddingBottom: 20,
+                  }}
+                  key={index}
+                >
+                  {/* <Image
                   source={item.image}
                   style={{ height: 42, width: 42, marginRight: 10 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 14,
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.textClr,
-                    maxWidth: "80%",
-                  }}
-                >
-                  {item.text}
-                </Text>
-              </View>
-            ))}
+                /> */}
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "800",
+                      fontFamily: "FiraSans-R",
+                      color: colors.textClr,
+                      maxWidth: "80%",
+                    }}
+                  >
+                    {item?.question?.questionName}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "400",
+                      fontFamily: "FiraSans-R",
+                      color: colors.textClr,
+                      marginTop: 5,
+                    }}
+                  >
+                    {item?.question?.questiondescription}
+                  </Text>
+                </View>
+              ))}
           </View>
         </View>
       </ScrollView>
@@ -206,7 +225,7 @@ const Activities = () => {
   );
 };
 
-export default Activities;
+export default Questions;
 
 const styles = StyleSheet.create({
   btnContainer: {
@@ -235,13 +254,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
-    // fontFamily: "FiraSans_400Regular",
+    fontFamily: "FiraSans-R",
     color: colors.lightText,
     fontWeight: "400",
   },
   selectedButtonText: {
     fontSize: 14,
-    // fontFamily: "FiraSans_700Bold",
+    fontFamily: "FiraSans-Bold",
     color: colors.textClr,
     fontWeight: "800",
   },

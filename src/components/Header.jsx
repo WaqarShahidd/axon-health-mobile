@@ -1,11 +1,24 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 
 const { fontScale } = Dimensions.get("window");
 
 const Header = ({ title }) => {
+  const { userData } = useSelector((state) => state.user);
   return (
-    <View style={{ paddingTop: "10%", marginHorizontal: 20 }}>
+    <View
+      style={{
+        paddingTop: Platform.OS === "android" ? "5%" : "10%",
+        marginHorizontal: 20,
+      }}
+    >
       <View
         style={{
           position: "relative",

@@ -13,6 +13,12 @@ import { Entypo } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { BASE_URL } from "../../constants/config";
+import CustomBtn from "../../components/CustomBtn";
+import Spinner from "react-native-loading-spinner-overlay";
+import Snack from "../../components/Snack";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [selectedButton, setSelectedButton] = useState("active");
@@ -48,9 +54,73 @@ const Dashboard = () => {
   };
 
   const toggleBtns = [
-    { id: 1, text: "Active Goals", value: "active" },
+    { id: 1, text: "Active Goals", value: "pending" },
     { id: 2, text: "Completed Goals", value: "completed" },
   ];
+
+  const { userData } = useSelector((state) => state.user);
+
+  const [confirmation, setconfirmation] = useState(false);
+  const [loading, setloading] = useState(false);
+
+  const CheckIn = async (e) => {
+    setloading(true);
+    await axios
+      .post(`${BASE_URL}/patient_checkin/createPatientCheckIn`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setloading(false);
+        setconfirmation(true);
+      })
+      .catch((e) => {
+        setloading(false);
+        setconfirmation(false);
+      });
+  };
+
+  const GetDailyGoals = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/patient_goal/getAllPatientGoal?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        setloading(false);
+        setdailyGoals(res.data?.allPatientGoals);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
+  const [doctor, setdoctor] = useState({});
+
+  const GetDoctor = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/doctor_patient/getAssignedDoctorWithPatientId?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        setloading(false);
+        setdoctor(res.data?.allPatientsDoctors?.assignedDoctor);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
+  useEffect(() => {
+    GetDailyGoals();
+    GetDoctor();
+  }, [selectedButton]);
 
   const navigation = useNavigation();
 
@@ -261,7 +331,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   button: {
-    flex: 1,
+    width: "50%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "transparent",
@@ -269,7 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   selectedButton: {
-    flex: 1,
+    width: "50%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",

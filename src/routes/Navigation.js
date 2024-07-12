@@ -12,6 +12,9 @@ import Activities from "../Screens/Activities/Activities";
 import FormView from "../Screens/Activities/FormView";
 import AssesmentForms from "../Screens/Assesment Forms/AssesmentForms";
 import CheckIn from "../Screens/Daily Check-In/CheckIn";
+import Auth from "../Screens/Auth/Auth";
+import { useSelector } from "react-redux";
+import Questions from "../Screens/Questions/Questions";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +31,7 @@ const ModalScreen = ({}) => {
 };
 
 const Navigation = () => {
+  const { userData } = useSelector((state) => state.user);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -35,25 +39,32 @@ const Navigation = () => {
         gestureEnabled: true,
         gestureDirection: "horizontal",
       }}
-      initialRouteName={"Home"}
+      initialRouteName={userData?.role === "patient" ? "Home" : "Login"}
     >
-      <Stack.Screen name="Home" component={BottomTabs} />
-      <Stack.Screen name="Activities" component={Activities} />
-      <Stack.Screen name="FormView" component={FormView} />
-      <Stack.Screen name="AssesmentForms" component={AssesmentForms} />
-      <Stack.Screen name="GoalDetails" component={GoalDetails} />
-      <Stack.Screen name="CheckIn" component={CheckIn} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="Settings" component={Settings} />
-      <Stack.Screen name="Help" component={Help} />
-      <Stack.Screen
-        name="Modal"
-        component={ModalScreen}
-        options={{
-          headerShown: false,
-          presentation: "modal",
-        }}
-      />
+      {userData?.role === "patient" ? (
+        <Stack.Group>
+          <Stack.Screen name="Home" component={BottomTabs} />
+          <Stack.Screen name="Activities" component={Activities} />
+          <Stack.Screen name="Questions" component={Questions} />
+          <Stack.Screen name="FormView" component={FormView} />
+          <Stack.Screen name="AssesmentForms" component={AssesmentForms} />
+          <Stack.Screen name="GoalDetails" component={GoalDetails} />
+          <Stack.Screen name="CheckIn" component={CheckIn} />
+          <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name="Help" component={Help} />
+          <Stack.Screen
+            name="Modal"
+            component={ModalScreen}
+            options={{
+              headerShown: false,
+              presentation: "modal",
+            }}
+          />
+        </Stack.Group>
+      ) : (
+        <Stack.Screen name="Login" component={Auth} />
+      )}
     </Stack.Navigator>
   );
 };

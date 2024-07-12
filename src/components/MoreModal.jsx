@@ -31,6 +31,11 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
       icon: require("../../assets/icons/forms.png"),
     },
     {
+      id: 3,
+      title: "Questions",
+      icon: require("../../assets/icons/forms.png"),
+    },
+    {
       id: 4,
       title: "Settings",
       icon: require("../../assets/icons/settings.png"),
@@ -162,6 +167,8 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                       navigation.navigate("AssesmentForms");
                     } else if (item.title === "Daily Check-Ins") {
                       navigation.navigate("CheckIn");
+                    } else if (item.title === "Questions") {
+                      navigation.navigate("Questions");
                     }
                     setModalVisible(false);
                   }}
