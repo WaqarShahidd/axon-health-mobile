@@ -81,7 +81,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
             style={{
               fontSize: 12,
               fontWeight: "500",
-              fontFamily: "FiraSans-Bold",
+              // fontFamily: "FiraSans_700Bold",
               color: colors.secondary,
               marginTop: 7.5,
             }}
@@ -106,7 +106,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
             style={{
               fontSize: 12,
               fontWeight: "500",
-              fontFamily: "FiraSans-R",
+              // fontFamily: "FiraSans_400Regular",
               color: colors.secondary,
               marginTop: 7.5,
             }}
@@ -170,7 +170,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                   <Text
                     style={{
                       fontSize: 18,
-                      fontFamily: "FiraSans-R",
+                      // fontFamily: "FiraSans_400Regular",
                       color: colors.textClr,
                       marginLeft: 10,
                     }}

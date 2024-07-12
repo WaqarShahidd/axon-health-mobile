@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "white",
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
     marginRight: 15,
   },
 });

@@ -98,7 +98,7 @@ export const CustomInput = ({
                 backgroundColor: "transparent",
                 paddingHorizontal: 0,
                 zIndex: 1,
-                fontFamily: "FiraSans-Bold",
+                // fontFamily: "FiraSans_700Bold",
                 fontSize: 11,
                 textTransform: "uppercase",
               }}

@@ -1,7 +1,5 @@
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { colors } from "../theme/theme";
-import { MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -26,7 +24,7 @@ const Header = ({ title }) => {
             objectFit: "contain",
           }}
         />
-        <View
+        {/* <View
           style={{
             position: "absolute",
             bottom: 0,
@@ -41,7 +39,7 @@ const Header = ({ title }) => {
             size={15}
             color={colors.primary}
           />
-        </View>
+        </View> */}
       </View>
       <View>
         <Text
@@ -50,7 +48,7 @@ const Header = ({ title }) => {
             fontWeight: "bold",
             color: "#333742",
             marginTop: 10,
-            fontFamily: "FiraSans-Bold",
+            // fontFamily: "FiraSans_700Bold",
           }}
         >
           Hi, Welcome back!
@@ -68,12 +66,11 @@ const Header = ({ title }) => {
               fontWeight: "bold",
               color: "#333742",
               marginTop: 10,
-              fontFamily: "FiraSans-Bold",
+              // fontFamily: "FiraSans_700Bold",
             }}
           >
             {title}
           </Text>
-          <AntDesign name="search1" size={24} color={colors.primary} />
         </View>
       </View>
     </View>

@@ -17,7 +17,7 @@ const GoalCards = ({ title, cardData }) => {
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
     Animated.timing(collapseAnimation, {
-      toValue: collapsed ? 1 : 0, // If it's collapsed, expand; if it's expanded, collapse
+      toValue: collapsed ? 1 : 0,
       duration: 300,
       easing: Easing.linear,
       useNativeDriver: false,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 24,
     fontWeight: "600",
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
   },
   collapseButton: {
     flexDirection: "row",
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     color: colors.primary,
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
   },
   container: {
     overflow: "hidden",

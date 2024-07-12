@@ -150,7 +150,7 @@ const FormView = () => {
               style={{
                 fontSize: 16,
                 fontWeight: "500",
-                fontFamily: "FiraSans-R",
+                // fontFamily: "FiraSans_400Regular",
                 color: colors.secondary,
                 maxWidth: "80%",
               }}
@@ -201,7 +201,7 @@ const FormView = () => {
                   style={{
                     color: colors.secondary,
                     fontSize: 16,
-                    fontFamily: "FiraSans-Bold",
+                    // fontFamily: "FiraSans_700Bold",
                   }}
                 >
                   Upload Attachment
@@ -210,7 +210,7 @@ const FormView = () => {
                   style={{
                     color: colors.lightText,
                     fontSize: 12,
-                    fontFamily: "FiraSans-R",
+                    // fontFamily: "FiraSans_400Regular",
                     marginTop: 5,
                   }}
                 >

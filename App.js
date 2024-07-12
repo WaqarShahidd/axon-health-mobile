@@ -3,15 +3,17 @@ import { StyleSheet, Text, View } from "react-native";
 import Navigation from "./src/routes/Navigation";
 import { NavigationContainer } from "@react-navigation/native";
 import { PaperProvider } from "react-native-paper";
-import { useFonts } from "expo-font";
+import AppLoading from "./src/constants/AppLoading";
 
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Navigation />
-      </NavigationContainer>
-    </PaperProvider>
+    <AppLoading>
+      <PaperProvider>
+        <NavigationContainer>
+          <Navigation />
+        </NavigationContainer>
+      </PaperProvider>
+    </AppLoading>
   );
 }
 

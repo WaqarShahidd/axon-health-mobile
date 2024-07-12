@@ -74,7 +74,7 @@ const Profile = () => {
               style={{
                 color: colors.textClr,
                 fontSize: 14,
-                fontFamily: "FiraSans-Bold",
+                // fontFamily: "FiraSans_700Bold",
               }}
             >
               Upload Picture

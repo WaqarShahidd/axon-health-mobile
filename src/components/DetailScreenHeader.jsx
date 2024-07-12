@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: colors.textClr,
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
   },
   btn: {
     height: 40,

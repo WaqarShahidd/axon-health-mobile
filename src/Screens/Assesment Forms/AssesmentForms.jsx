@@ -99,7 +99,7 @@ const AssesmentForms = () => {
                 <Text
                   style={{
                     fontSize: 14,
-                    fontFamily: "FiraSans-R",
+                    // fontFamily: "FiraSans_400Regular",
                     color: colors.secondary,
                   }}
                   ellipsizeMode="tail"
@@ -129,7 +129,7 @@ const AssesmentForms = () => {
               <Text
                 style={{
                   fontSize: 16,
-                  fontFamily: "FiraSans-Bold",
+                  // fontFamily: "FiraSans_700Bold",
                   color: colors.textClr,
                 }}
               >
@@ -139,7 +139,7 @@ const AssesmentForms = () => {
                 style={{
                   color: colors.primary,
                   fontSize: 14,
-                  fontFamily: "FiraSans-R",
+                  // fontFamily: "FiraSans_400Regular",
                 }}
               >
                 See All
@@ -165,7 +165,7 @@ const AssesmentForms = () => {
                 <Text
                   style={{
                     fontSize: 14,
-                    fontFamily: "FiraSans-R",
+                    // fontFamily: "FiraSans_400Regular",
                     color: colors.textClr,
                     maxWidth: "80%",
                   }}
@@ -210,13 +210,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
     color: colors.lightText,
     fontWeight: "400",
   },
   selectedButtonText: {
     fontSize: 14,
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
     color: colors.textClr,
     fontWeight: "800",
   },

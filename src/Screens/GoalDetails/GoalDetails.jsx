@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: colors.textClr,
     marginTop: 40,
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
   },
   inputContainer: {
     flexDirection: "row",
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
   },
   icon: {
     paddingTop: 10,

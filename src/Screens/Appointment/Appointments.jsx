@@ -82,7 +82,7 @@ const Appointments = () => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: "FiraSans-Bold",
+                // fontFamily: "FiraSans_700Bold",
                 color: colors.textClr,
               }}
             >
@@ -91,7 +91,7 @@ const Appointments = () => {
             <Text
               style={{
                 fontSize: 14,
-                fontFamily: "FiraSans-R",
+                // fontFamily: "FiraSans_400Regular",
                 color: colors.primary,
                 textDecorationLine: "underline",
               }}
@@ -148,6 +148,7 @@ const Appointments = () => {
                     : styles.button
                 }
                 onPress={() => setSelectedButton(btn.value)}
+                key={btn.id}
               >
                 <Text
                   style={
@@ -220,13 +221,13 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 14,
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
     color: colors.lightText,
     fontWeight: "400",
   },
   selectedButtonText: {
     fontSize: 14,
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
     color: colors.textClr,
     fontWeight: "800",
   },
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     fontWeight: "600",
-    fontFamily: "FiraSans-Bold",
+    // fontFamily: "FiraSans_700Bold",
     maxWidth: "80%",
   },
   collapseButton: {
@@ -250,7 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     color: colors.primary,
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
   },
   cardContainer: {
     overflow: "hidden",

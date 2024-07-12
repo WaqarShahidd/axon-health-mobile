@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: "400",
-    fontFamily: "FiraSans-R",
+    // fontFamily: "FiraSans_400Regular",
     lineHeight: 18,
     color: colors.textClr,
   },

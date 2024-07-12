@@ -109,7 +109,7 @@ const CheckIn = () => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: "FiraSans-Bold",
+                // fontFamily: "FiraSans_700Bold",
                 color: colors.textClr,
               }}
             >

@@ -28,7 +28,7 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/FiraSans-Bold.ttf"]
+          "fonts": ["./assets/fonts/FiraSans_700Bold.ttf"]
         }
       ]
     ]
