@@ -5,8 +5,9 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ScrollView
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import {
@@ -16,37 +17,131 @@ import {
 } from "@expo/vector-icons";
 import CustomBtn from "../../components/CustomBtn";
 import DetailScreenHeader from "../../components/DetailScreenHeader";
+import axios from "axios";
+import { BASE_URL } from "../../constants/config";
+import RadioBtn from "../../components/RadioBtn";
+import { useNavigation } from "@react-navigation/native";
 
-const GoalDetails = () => {
+const GoalDetails = ({route}) => {
+  const {id,type} = route.params;
+  const [loading, setloading] = useState(false);
+  const [activityDetail, setActivityDetail] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const navigation = useNavigation();
+
+  const GetPatientActivityDetail = async (e) => {
+    setloading(true);
+    await axios
+    .get(
+      `${BASE_URL}/activity/getActivityDetails?activityId=${id}`,
+      {
+        withCredentials: true,
+      }
+    )
+    .then(async (res) => {
+      setloading(false);
+      setActivityDetail(res.data.activitySite);
+
+    })
+    .catch((e) => {
+      console.log(e);
+
+      setloading(false);
+    });
+  }
+  const GetPatientFormDetail = async (e) => {
+    setloading(true);
+    await axios
+    .get(
+      `${BASE_URL}/form/getFormDetails?formId=${id}`,
+      {
+        withCredentials: true,
+      }
+    )
+    .then(async (res) => {
+      setloading(false);
+      console.log(res?.data?.allForm);
+      setActivityDetail(res?.data?.allForm[0]);
+
+    })
+    .catch((e) => {
+      setloading(false);
+    });
+
+  }
+  useEffect(() => {
+    if(route?.params?.type==='Daily Activity' || route?.params?.type==='Daily Check-In Questions')
+    {
+     GetPatientActivityDetail();
+
+    }
+    else if (route?.params?.type==='Form')
+    {
+     GetPatientFormDetail();
+
+    }
+  }, []);
+
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <LinearGradient
         colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
         style={styles.gradient}
       />
+      <DetailScreenHeader title="Activity Details" backPress={() => navigation.goBack() }/>
+      <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
 
-      <DetailScreenHeader title="Goal Details" />
 
-      <Text style={styles.goalText}>
-        Connect with someone in recovery on an emotional level
-      </Text>
+      {  
+      (type==='Daily Activity' || 'Daily Check-In Questions') &&
+          (
+            <>
+          <Text style={styles.goalText}>
+            {activityDetail?.activityName}
+          </Text> 
+          <View style={styles.inputContainer}>
+            <RadioBtn
+            options={activityDetail?.options}
+            selectedOption={selectedOption}
+            onSelect={(option) => setSelectedOption(option)}>
 
-      <View style={styles.inputContainer}>
-        <MaterialCommunityIcons
-          name="note-outline"
-          size={20}
-          color={colors.textClr}
-          style={styles.icon}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Note"
-          multiline={true}
-          placeholderTextColor={colors.textClr}
-          numberOfLines={4}
-          borderRadius={12}
-        />
-      </View>
+            </RadioBtn>
+          </View>
+
+            </>
+          )
+    }
+
+    {type === "Form" && (
+      <>
+        <Text style={styles.formText}>
+          {activityDetail?.form_name}
+        </Text>
+        {
+          activityDetail?.questions?.map((question,index)=>{
+            return(
+              <>
+              <Text style={styles.questions}>
+                {index+1}: {question?.question}
+              </Text>
+              <View style={styles.inputContainer}>
+                <RadioBtn
+                        options={question?.answers}
+                        selectedOption={selectedOption}
+                        onSelect={(option) => setSelectedOption(option)}>
+            
+                </RadioBtn>
+              </View>
+            </>
+  
+            )
+          })
+        }
+      </>
+    
+    )}
+
 
       <View
         style={{
@@ -55,8 +150,9 @@ const GoalDetails = () => {
           marginBottom: 20,
         }}
       >
-        <CustomBtn text="Mark Goal Completed" />
+        <CustomBtn text="Mark Goal Completed" onPress={()=>{navigation.goBack()}}/>
       </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -77,12 +173,25 @@ const styles = StyleSheet.create({
     borderRadius: 360,
     right: -50,
   },
+  formText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.textClr,
+    marginTop:-40
+  },
 
   goalText: {
     fontSize: 24,
     fontWeight: "bold",
     color: colors.textClr,
-    marginTop: 40,
+     marginTop: 40,
+    // fontFamily: "FiraSans_700Bold",
+  },
+  questions: {
+    fontSize: 16,
+    
+    color: colors.textClr,
+    marginTop: 20,
     // fontFamily: "FiraSans_700Bold",
   },
   inputContainer: {

@@ -17,7 +17,9 @@ const DetailScreenHeader = ({
         <AntDesign name="arrowleft" size={24} color={colors.secondary} />
       </TouchableOpacity>
       <Text style={styles.headerText}>{title}</Text>
-      <TouchableOpacity onPress={moreOptionsFunc} style={styles.btn}>
+      {
+        title!='Activity Details'?
+        <TouchableOpacity onPress={moreOptionsFunc} style={styles.btn}>
         {noMoreOption && (
           <FontAwesome6
             name="ellipsis-vertical"
@@ -26,6 +28,12 @@ const DetailScreenHeader = ({
           />
         )}
       </TouchableOpacity>
+        :      
+        <TouchableOpacity onPress={backPress} style={styles.btn}>
+        {/* <AntDesign name="arrowleft" size={24} color={colors.secondary} /> */}
+      </TouchableOpacity>
+
+      }
     </View>
   );
 };

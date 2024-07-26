@@ -15,38 +15,38 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
   const navigation = useNavigation();
 
   const moreOptions = [
+    // {
+    //   id: 1,
+    //   title: "Daily Check-Ins",
+    //   icon: require("../../assets/icons/check-in.png"),
+    // },
+    // {
+    //   id: 2,
+    //   title: "Activities",
+    //   icon: require("../../assets/icons/activities.png"),
+    // },
+    // {
+    //   id: 3,
+    //   title: "Assessment Forms",
+    //   icon: require("../../assets/icons/forms.png"),
+    // },
+    // {
+    //   id: 3,
+    //   title: "Questions",
+    //   icon: require("../../assets/icons/forms.png"),
+    // },
     {
       id: 1,
-      title: "Daily Check-Ins",
-      icon: require("../../assets/icons/check-in.png"),
-    },
-    {
-      id: 2,
-      title: "Activities",
-      icon: require("../../assets/icons/activities.png"),
-    },
-    {
-      id: 3,
-      title: "Assessment Forms",
-      icon: require("../../assets/icons/forms.png"),
-    },
-    {
-      id: 3,
-      title: "Questions",
-      icon: require("../../assets/icons/forms.png"),
-    },
-    {
-      id: 4,
       title: "Settings",
       icon: require("../../assets/icons/settings.png"),
     },
     {
-      id: 5,
+      id: 2,
       title: "Help",
       icon: require("../../assets/icons/help.png"),
     },
     {
-      id: 6,
+      id: 3,
       title: "Privacy Policy",
       icon: require("../../assets/icons/forms.png"),
     },
@@ -135,13 +135,13 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
           margin: 0,
         }}
       >
-        <View style={{ backgroundColor: "white", height: "50%" }}>
-          <ScrollView
+        <View style={{ backgroundColor: "white", height: "30%" }}>
+          {/* <ScrollView
             ref={scrollViewRef}
             onScroll={handleOnScroll}
             scrollEventThrottle={16}
             contentContainerStyle={{ paddingBottom: 20 }}
-          >
+          > */}
             <View style={{ marginVertical: 10 }}>
               {moreOptions.map((item, index) => (
                 <TouchableOpacity
@@ -187,7 +187,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                 </TouchableOpacity>
               ))}
             </View>
-          </ScrollView>
+          {/* </ScrollView> */}
         </View>
       </Modal>
     </>

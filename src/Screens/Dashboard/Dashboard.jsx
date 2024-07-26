@@ -7,7 +7,7 @@ import {
   View,
   LayoutAnimation,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../../theme/theme";
 import { Entypo } from "@expo/vector-icons";
 import Header from "../../components/Header";
@@ -54,7 +54,7 @@ const Dashboard = () => {
   };
 
   const toggleBtns = [
-    { id: 1, text: "Active Goals", value: "pending" },
+    { id: 1, text: "Active Goals", value: "active" },
     { id: 2, text: "Completed Goals", value: "completed" },
   ];
 
@@ -98,6 +98,8 @@ const Dashboard = () => {
   };
 
   const [doctor, setdoctor] = useState({});
+  const [todaysActivities, setTodaysActivities] = useState([]);
+  const [allActivities, setAllActivities] = useState([]);
 
   const GetDoctor = async (e) => {
     setloading(true);
@@ -117,9 +119,58 @@ const Dashboard = () => {
       });
   };
 
+  const GetAllPatientActivities = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/user/getAllAssignmentsByPatientIdForPatients?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then(async (res) => {
+        setloading(false);
+        console.log(res.data);
+        const allActivities = res.data.allFormsAndActivities;
+        // setAllForms(res.data?.assignedForm);
+        // setAllActivities(res.data?.assignedActivities);
+        
+        // const mergedArray = await res.data?.assignedForm.concat(res.data?.assignedActivities);
+        // const mergedArrays = await mergedArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const todaysEvents = allActivities.filter(event => {
+          const eventDate = new Date(event.date);
+          return eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000);
+        });
+        
+        // Remove today's events from the merged array
+        for (let i = allActivities.length - 1; i >= 0; i--) {
+          const eventDate = new Date(allActivities[i].date);
+          if (eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)) {
+            allActivities.splice(i, 1);
+          }
+        }
+        
+        if(todaysEvents.length==0)
+        {
+          setIsTodayCollapsed(true);
+        }
+        setAllActivities(allActivities);
+        setTodaysActivities(todaysEvents);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
   useEffect(() => {
     GetDailyGoals();
     GetDoctor();
+    GetAllPatientActivities();
   }, [selectedButton]);
 
   const navigation = useNavigation();
@@ -173,6 +224,7 @@ const Dashboard = () => {
           {/* Accordions */}
           <View>
             {/* Today Goals */}
+            
             <View style={styles.header}>
               <Text style={styles.headerText}>Today</Text>
               <TouchableOpacity
@@ -189,21 +241,28 @@ const Dashboard = () => {
                 />
               </TouchableOpacity>
             </View>
-            {!isTodayCollapsed && (
+            { !isTodayCollapsed ? 
+              todaysActivities.length!=0?
               <View>
-                {goalCardData.map(
+                {todaysActivities.map(
                   (goal, index) =>
-                    goal?.title === "Today" && (
-                      <View style={styles.box} key={index}>
-                        <Text style={styles.boxText}>{goal.cardText}</Text>
+                    (
+                      <TouchableOpacity
+                      onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
+                      style={styles.box}
+                      key={index}
+                    >
+                      {/* <View style={styles.box} key={index}> */}
+                        <Text style={styles.boxText}>{goal.name}</Text>
                         <Text style={styles.remainingText}>
                           2 remaining today
                         </Text>
-                      </View>
+                      {/* </View> */}
+                      </TouchableOpacity>
                     )
                 )}
               </View>
-            )}
+            :<View><Text>No Activities For today found.</Text></View>:''}
           </View>
 
           {/* This Week Goals */}
@@ -226,15 +285,15 @@ const Dashboard = () => {
             </View>
             {!isWeekCollapsed && (
               <View>
-                {goalCardData.map(
+                {allActivities.map(
                   (goal, index) =>
-                    goal?.title === "This Week" && (
+                     (
                       <TouchableOpacity
-                        onPress={() => navigation.navigate("GoalDetails")}
+                        onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
                         style={styles.box}
                         key={index}
                       >
-                        <Text style={styles.boxText}>{goal.cardText}</Text>
+                        <Text style={styles.boxText}>{goal.name}</Text>
                         <Text style={styles.remainingText}>
                           2 remaining this week
                         </Text>

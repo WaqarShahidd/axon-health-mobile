@@ -26,6 +26,7 @@ import { colors } from "../theme/theme";
 import Modal from "react-native-modal";
 import { moreOptions } from "../../assets/data/dummyData";
 import MoreModal from "../components/MoreModal";
+import AssesmentForms from "../Screens/Assesment Forms/AssesmentForms";
 
 const Tab = createBottomTabNavigator();
 
@@ -233,8 +234,8 @@ const BottomTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="Documents"
+        component={AssesmentForms}
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
@@ -261,7 +262,7 @@ const BottomTabs = () => {
                     marginTop: 7.5,
                   }}
                 >
-                  Profile{" "}
+                  Documents{" "}
                 </Text>
               </View>
             ) : (
@@ -286,7 +287,7 @@ const BottomTabs = () => {
                     marginTop: 7.5,
                   }}
                 >
-                  Profile
+                  Documents
                 </Text>
               </View>
             ),

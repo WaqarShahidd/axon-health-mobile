@@ -128,6 +128,7 @@ const Auth = () => {
                 noCap={true}
                 Icon={MaterialCommunityIcons}
                 iconName="email-outline"
+                type="email-address"
               />
               <CustomPasswordInput
                 placeholder="Password"
