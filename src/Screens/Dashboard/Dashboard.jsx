@@ -130,8 +130,7 @@ const Dashboard = () => {
       )
       .then(async (res) => {
         setloading(false);
-        console.log(res.data);
-        const allActivities = res.data.allFormsAndActivities;
+        const allActivity = res.data.allFormsAndActivities;
         // setAllForms(res.data?.assignedForm);
         // setAllActivities(res.data?.assignedActivities);
         
@@ -142,16 +141,16 @@ const Dashboard = () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const todaysEvents = allActivities.filter(event => {
+        const todaysEvents = allActivity.filter(event => {
           const eventDate = new Date(event.date);
           return eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000);
         });
         
         // Remove today's events from the merged array
-        for (let i = allActivities.length - 1; i >= 0; i--) {
-          const eventDate = new Date(allActivities[i].date);
+        for (let i = allActivity.length - 1; i >= 0; i--) {
+          const eventDate = new Date(allActivity[i].date);
           if (eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)) {
-            allActivities.splice(i, 1);
+            allActivity.splice(i, 1);
           }
         }
         
@@ -159,7 +158,11 @@ const Dashboard = () => {
         {
           setIsTodayCollapsed(true);
         }
-        setAllActivities(allActivities);
+        if(allActivity.length==0)
+        {
+          setIsWeekCollapsed(true);
+        }
+        setAllActivities(allActivity);
         setTodaysActivities(todaysEvents);
       })
       .catch((e) => {
@@ -189,7 +192,11 @@ const Dashboard = () => {
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Today's Goals" />
+        {
+          selectedButton==='active'?
+          <Header title="Today's Goals" />
+          :<Header title="Completed Goals" />
+        }
         <View
           style={{
             marginHorizontal: 20,
@@ -222,7 +229,9 @@ const Dashboard = () => {
           </View>
 
           {/* Accordions */}
-          <View>
+          {
+            selectedButton=='active'?
+            <View>
             {/* Today Goals */}
             
             <View style={styles.header}>
@@ -263,9 +272,14 @@ const Dashboard = () => {
                 )}
               </View>
             :<View><Text>No Activities For today found.</Text></View>:''}
-          </View>
+          </View>:''
+          }
+
 
           {/* This Week Goals */}
+          {
+            selectedButton=='active'?
+
           <View>
             <View style={styles.header}>
               <Text style={styles.headerText}>This Week</Text>
@@ -302,8 +316,28 @@ const Dashboard = () => {
                 )}
               </View>
             )}
-          </View>
-
+          </View>:''}
+            {
+              selectedButton=='completed'?            
+                <View>
+                  {allActivities.map(
+                    (goal, index) =>
+                       (
+                        <TouchableOpacity
+                          onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
+                          style={styles.box}
+                          key={index}
+                        >
+                          <Text style={styles.boxText}>{goal.name}</Text>
+                          <Text style={styles.remainingText}>
+                            2 remaining this week
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                  )}
+                </View>
+            :''
+            }
           {/* Your Therapist */}
           <View style={{ justifyContent: "center" }}>
             <View style={styles.box}>
