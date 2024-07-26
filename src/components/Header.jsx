@@ -30,7 +30,11 @@ const Header = ({ title }) => {
         }}
       >
         <Image
-          source={require("../../assets/images/avatar.jpeg")}
+          source={
+            userData?.avatar
+              ? userData?.avatar
+              : require("../../assets/images/user.png")
+          }
           style={{
             width: 75,
             height: 75,

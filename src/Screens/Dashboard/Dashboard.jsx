@@ -133,33 +133,36 @@ const Dashboard = () => {
         const allActivity = res.data.allFormsAndActivities;
         // setAllForms(res.data?.assignedForm);
         // setAllActivities(res.data?.assignedActivities);
-        
+
         // const mergedArray = await res.data?.assignedForm.concat(res.data?.assignedActivities);
         // const mergedArrays = await mergedArray.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const todaysEvents = allActivity.filter(event => {
+        const todaysEvents = allActivity.filter((event) => {
           const eventDate = new Date(event.date);
-          return eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000);
+          return (
+            eventDate >= today &&
+            eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)
+          );
         });
-        
+
         // Remove today's events from the merged array
         for (let i = allActivity.length - 1; i >= 0; i--) {
           const eventDate = new Date(allActivity[i].date);
-          if (eventDate >= today && eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)) {
+          if (
+            eventDate >= today &&
+            eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)
+          ) {
             allActivity.splice(i, 1);
           }
         }
-        
-        if(todaysEvents.length==0)
-        {
+
+        if (todaysEvents.length == 0) {
           setIsTodayCollapsed(true);
         }
-        if(allActivity.length==0)
-        {
+        if (allActivity.length == 0) {
           setIsWeekCollapsed(true);
         }
         setAllActivities(allActivity);
@@ -192,11 +195,11 @@ const Dashboard = () => {
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        {
-          selectedButton==='active'?
+        {selectedButton === "active" ? (
           <Header title="Today's Goals" />
-          :<Header title="Completed Goals" />
-        }
+        ) : (
+          <Header title="Completed Goals" />
+        )}
         <View
           style={{
             marginHorizontal: 20,
@@ -229,115 +232,130 @@ const Dashboard = () => {
           </View>
 
           {/* Accordions */}
-          {
-            selectedButton=='active'?
+          {selectedButton == "active" ? (
             <View>
-            {/* Today Goals */}
-            
-            <View style={styles.header}>
-              <Text style={styles.headerText}>Today</Text>
-              <TouchableOpacity
-                style={styles.collapseButton}
-                onPress={toggleTodayCollapse}
-              >
-                <Text style={styles.collapseButtonText}>
-                  {isTodayCollapsed ? "Expand" : "Collapse"}
-                </Text>
-                <Entypo
-                  name={!isTodayCollapsed ? "chevron-up" : "chevron-down"}
-                  size={18}
-                  color={colors.primary}
-                />
-              </TouchableOpacity>
-            </View>
-            { !isTodayCollapsed ? 
-              todaysActivities.length!=0?
-              <View>
-                {todaysActivities.map(
-                  (goal, index) =>
-                    (
-                      <TouchableOpacity
-                      onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
-                      style={styles.box}
-                      key={index}
-                    >
-                      {/* <View style={styles.box} key={index}> */}
-                        <Text style={styles.boxText}>{goal.name}</Text>
-                        <Text style={styles.remainingText}>
-                          2 remaining today
-                        </Text>
-                      {/* </View> */}
-                      </TouchableOpacity>
-                    )
-                )}
+              {/* Today Goals */}
+
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Today</Text>
+                <TouchableOpacity
+                  style={styles.collapseButton}
+                  onPress={toggleTodayCollapse}
+                >
+                  <Text style={styles.collapseButtonText}>
+                    {isTodayCollapsed ? "Expand" : "Collapse"}
+                  </Text>
+                  <Entypo
+                    name={!isTodayCollapsed ? "chevron-up" : "chevron-down"}
+                    size={18}
+                    color={colors.primary}
+                  />
+                </TouchableOpacity>
               </View>
-            :<View><Text>No Activities For today found.</Text></View>:''}
-          </View>:''
-          }
-
-
-          {/* This Week Goals */}
-          {
-            selectedButton=='active'?
-
-          <View>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>This Week</Text>
-              <TouchableOpacity
-                style={styles.collapseButton}
-                onPress={toggleWeekCollapse}
-              >
-                <Text style={styles.collapseButtonText}>
-                  {isWeekCollapsed ? "Expand" : "Collapse"}
-                </Text>
-                <Entypo
-                  name={!isWeekCollapsed ? "chevron-up" : "chevron-down"}
-                  size={18}
-                  color={colors.primary}
-                />
-              </TouchableOpacity>
-            </View>
-            {!isWeekCollapsed && (
-              <View>
-                {allActivities.map(
-                  (goal, index) =>
-                     (
+              {!isTodayCollapsed ? (
+                todaysActivities.length != 0 ? (
+                  <View>
+                    {todaysActivities.map((goal, index) => (
                       <TouchableOpacity
-                        onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
+                        onPress={() =>
+                          navigation.navigate("GoalDetails", {
+                            id: goal.id,
+                            type: goal.type,
+                          })
+                        }
                         style={styles.box}
                         key={index}
                       >
+                        {/* <View style={styles.box} key={index}> */}
                         <Text style={styles.boxText}>{goal.name}</Text>
                         <Text style={styles.remainingText}>
-                          2 remaining this week
+                          {"Assigned By: " + goal?.assignedBy?.name}
                         </Text>
+                        {/* </View> */}
                       </TouchableOpacity>
-                    )
-                )}
+                    ))}
+                  </View>
+                ) : (
+                  <View style={{ marginTop: 10 }}>
+                    <Text>No Activities For today found.</Text>
+                  </View>
+                )
+              ) : (
+                ""
+              )}
+            </View>
+          ) : (
+            ""
+          )}
+
+          {/* This Week Goals */}
+          {selectedButton == "active" ? (
+            <View>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>This Week</Text>
+                <TouchableOpacity
+                  style={styles.collapseButton}
+                  onPress={toggleWeekCollapse}
+                >
+                  <Text style={styles.collapseButtonText}>
+                    {isWeekCollapsed ? "Expand" : "Collapse"}
+                  </Text>
+                  <Entypo
+                    name={!isWeekCollapsed ? "chevron-up" : "chevron-down"}
+                    size={18}
+                    color={colors.primary}
+                  />
+                </TouchableOpacity>
               </View>
-            )}
-          </View>:''}
-            {
-              selectedButton=='completed'?            
+              {!isWeekCollapsed && (
                 <View>
-                  {allActivities.map(
-                    (goal, index) =>
-                       (
-                        <TouchableOpacity
-                          onPress={() => navigation.navigate("GoalDetails",{id:goal.id,type:goal.type})}
-                          style={styles.box}
-                          key={index}
-                        >
-                          <Text style={styles.boxText}>{goal.name}</Text>
-                          <Text style={styles.remainingText}>
-                            2 remaining this week
-                          </Text>
-                        </TouchableOpacity>
-                      )
-                  )}
+                  {allActivities.map((goal, index) => (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("GoalDetails", {
+                          id: goal.id,
+                          type: goal.type,
+                        })
+                      }
+                      style={styles.box}
+                      key={index}
+                    >
+                      <Text style={styles.boxText}>{goal.name}</Text>
+                      <Text style={styles.remainingText}>
+                        {"Assigned By: " + goal?.assignedBy?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
-            :''
-            }
+              )}
+            </View>
+          ) : (
+            ""
+          )}
+          {selectedButton == "completed" ? (
+            <View>
+              {allActivities.map((goal, index) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("GoalDetails", {
+                      id: goal.id,
+                      type: goal.type,
+                      completed: true,
+                    })
+                  }
+                  style={styles.box}
+                  key={index}
+                >
+                  <Text style={styles.boxText}>{goal.name}</Text>
+                  <Text style={styles.remainingText}>
+                    {"Assigned By: " + goal?.assignedBy?.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            ""
+          )}
           {/* Your Therapist */}
           <View style={{ justifyContent: "center" }}>
             <View style={styles.box}>
@@ -361,7 +379,7 @@ const Dashboard = () => {
                 }}
               >
                 <Image
-                  source={require("../../../assets/images/avatar.jpeg")}
+                  source={require("../../../assets/images/user.png")}
                   style={{
                     width: 50,
                     height: 50,
