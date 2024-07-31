@@ -20,7 +20,7 @@ const Header = ({ title }) => {
         marginHorizontal: 20,
       }}
     >
-      <View
+     {title=="Today's Goals" && ( <View
         style={{
           position: "relative",
           backgroundColor: "grey",
@@ -29,7 +29,7 @@ const Header = ({ title }) => {
           borderRadius: 360,
         }}
       >
-        <Image
+         <Image
           source={
             userData?.avatar
               ? userData?.avatar
@@ -58,9 +58,9 @@ const Header = ({ title }) => {
             color={colors.primary}
           />
         </View> */}
-      </View>
+      </View>)}
       <View>
-        <Text
+      {title=="Today's Goals" && ( <Text
           style={{
             fontSize: 24,
             fontWeight: "bold",
@@ -70,7 +70,7 @@ const Header = ({ title }) => {
           }}
         >
           Hi, Welcome back!
-        </Text>
+        </Text>)}
         <View
           style={{
             flexDirection: "row",

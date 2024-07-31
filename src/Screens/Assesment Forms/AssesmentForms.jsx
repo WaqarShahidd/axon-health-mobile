@@ -6,13 +6,20 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,PermissionsAndroid, Platform
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, gradient } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
 import { draftItemData } from "../../../assets/data/dummyData";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { BASE_URL } from "../../constants/config";
+import { useSelector } from "react-redux";
+import * as FileSystem from 'expo-file-system';
+import * as Linking from 'expo-linking';
+import * as Sharing from 'expo-sharing';
 
 const toggleBtns = [
   { id: 1, text: "Active Assignments", value: "active" },
@@ -21,12 +28,123 @@ const toggleBtns = [
 
 const AssesmentForms = () => {
   const navigation = useNavigation();
+  const { userData } = useSelector((state) => state.user);
 
   const [selectedButton, setSelectedButton] = useState("active");
+  const [allDocuments, setAllDocuments] = useState([]);
+  const [loading, setloading] = useState(false);
 
   const handleButtonPress = (button) => {
     setSelectedButton(button);
   };
+
+  const getAllDocuments = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/patient_document/getDocumentByPatientId?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then(async (res) => {
+        setloading(false);
+        setAllDocuments(res?.data?.allDocuments);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
+  async function downloadFile(url, filename) {
+    const hasPermission = await requestStoragePermission();
+  if (!hasPermission) {
+    Alert.alert('Permission Denied', 'Cannot download the file without storage permission.');
+    return;
+  }
+    try {
+      // Define the file path
+      const fileUri = `${FileSystem.documentDirectory}${filename}`;
+  
+      // Start the download
+//      console.log(url);
+      const { uri } = await FileSystem.downloadAsync(url, fileUri);
+      if (await Sharing.isAvailableAsync()) {
+        // Share the file
+        await Sharing.shareAsync(uri);
+      } else {
+        // Fallback: Try to open the file with an external app
+        Alert.alert('Sharing not available', 'Opening the file with an external app.');
+        await Linking.openURL(uri);
+      }
+    //   console.log(uri);
+
+    //   const fileInfo = await FileSystem.getInfoAsync(uri);
+    //   console.log(fileInfo);
+
+    // if (fileInfo.exists) {
+    //   await Linking.openURL(encodeURI(fileInfo.uri));
+    // }
+    // else{
+    //   console.error('File does not exist at:', uri);
+    //   Alert.alert('Download failed', 'File does not exist after download.');
+    //   return;
+
+    // }
+
+    // const formattedUri = encodeURI(uri);
+    // console.log(formattedUri);
+
+    // const canOpen = await Linking.canOpenURL(formattedUri);
+    // console.log(canOpen);
+
+    // if (canOpen) {
+    //   await Linking.openURL(formattedUri);
+    // } else {
+    //   console.error("Can't open URL:", formattedUri);
+    //   Alert.alert('Open failed', 'Unable to open the file.');
+    // }
+    } catch (error) {
+      // Handle errors
+      console.error('Download error:', error);
+      Alert.alert('Download failed', 'There was an error downloading the file.');
+    }
+  }
+  async function requestStoragePermission() {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Storage Permission Required',
+            message:
+              'This app needs access to your storage to download and open files.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          }
+        );
+  
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the storage');
+          return true;
+        } else {
+          console.log('Storage permission denied');
+          return false;
+        }
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else {
+      // iOS or other platforms
+      return true;
+    }
+  }
+  useEffect(() => {
+    getAllDocuments();
+  }, [allDocuments]);
+
   return (
     <View
       style={{
@@ -41,14 +159,14 @@ const AssesmentForms = () => {
       />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        <Header title="Today’s Assessment" />
+        <Header title="Documents" />
         <View
           style={{
             marginTop: 20,
           }}
         >
           {/* Assignment */}
-          <View style={styles.btnContainer}>
+          {/* <View style={styles.btnContainer}>
             {toggleBtns.map((btn) => (
               <TouchableOpacity
                 key={btn.id}
@@ -70,17 +188,17 @@ const AssesmentForms = () => {
                 </Text>
               </TouchableOpacity>
             ))}
-          </View>
+          </View> */}
 
           {/* Draft Items */}
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={draftItemData}
+            data={allDocuments}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate("FormView")}
+                 onPress={() => downloadFile(item.document_url,item.documentName)}
                 style={{
                   width: 120,
                   height: 125,
@@ -92,10 +210,28 @@ const AssesmentForms = () => {
                   marginLeft: index === 0 ? 20 : 10,
                 }}
               >
-                <Image
-                  source={item.image}
+                {item?.documentName?.includes('pdf')?
+                <>
+                
+                    <Image
+                        source={require('../../../assets/icons/pdf.png')}
+                        style={{ height: 42, width: 42, marginBottom: 5 }}
+                      /></>
+                      : item.document_url.includes('docx')?
+                      <Image
+                      source={require('../../../assets/icons/word.png')}
+                      style={{ height: 42, width: 42, marginBottom: 5 }}
+                    />
+                    : item.document_url.includes('pptx')?
+                    <Image
+                    source={require('../../../assets/icons/powerpoint.png')}
+                    style={{ height: 42, width: 42, marginBottom: 5 }}
+                  />  
+                   :
+                   <Image
+                   source={require('../../../assets/icons/excel.png')}
                   style={{ height: 42, width: 42, marginBottom: 5 }}
-                />
+                />}
                 <Text
                   style={{
                     fontSize: 14,
@@ -105,7 +241,7 @@ const AssesmentForms = () => {
                   ellipsizeMode="tail"
                   numberOfLines={2}
                 >
-                  {item.text}
+                  {item.documentName}
                 </Text>
               </TouchableOpacity>
             )}
@@ -133,7 +269,7 @@ const AssesmentForms = () => {
                   color: colors.textClr,
                 }}
               >
-                All Items ({draftItemData.length})
+                All Items ({allDocuments.length})
               </Text>
               <Text
                 style={{
@@ -146,8 +282,10 @@ const AssesmentForms = () => {
               </Text>
             </View>
 
-            {draftItemData.map((item, index) => (
+            {allDocuments.map((item, index) => (
               <View
+              onPress={() => downloadFile(item.document_url,item.documentName)}
+
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
@@ -158,11 +296,27 @@ const AssesmentForms = () => {
                 }}
                 key={index}
               >
-                <Image
-                  source={item.image}
-                  style={{ height: 42, width: 42, marginRight: 10 }}
-                />
-                <Text
+                {item?.documentName?.includes('pdf')?                
+                    <Image
+                        source={require('../../../assets/icons/pdf.png')}
+                        style={{ height: 42, width: 42, marginBottom: 5 }}
+                      />
+                      : item.document_url.includes('docx')?
+                      <Image
+                      source={require('../../../assets/icons/word.png')}
+                      style={{ height: 42, width: 42, marginBottom: 5 }}
+                    />
+                    : item.document_url.includes('pptx')?
+                    <Image
+                    source={require('../../../assets/icons/powerpoint.png')}
+                    style={{ height: 42, width: 42, marginBottom: 5 }}
+                  />  
+                   :
+                   <Image
+                   source={require('../../../assets/icons/excel.png')}
+                  style={{ height: 42, width: 42, marginBottom: 5 }}
+                />}
+              <Text
                   style={{
                     fontSize: 14,
                     // fontFamily: "FiraSans_400Regular",
@@ -170,7 +324,7 @@ const AssesmentForms = () => {
                     maxWidth: "80%",
                   }}
                 >
-                  {item.text}
+                  {item?.documentName}
                 </Text>
               </View>
             ))}

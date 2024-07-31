@@ -100,6 +100,7 @@ const Dashboard = () => {
   const [doctor, setdoctor] = useState({});
   const [todaysActivities, setTodaysActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]);
+  const [completedActivities, setAllCompletedActivities] = useState([]);
 
   const GetDoctor = async (e) => {
     setloading(true);
@@ -173,10 +174,32 @@ const Dashboard = () => {
       });
   };
 
+  const getAllCompletedAssignments = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/user/getAllCompletedAssignmentsByPatientIdForPatients?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then(async (res) => {
+        setloading(false);
+        const allActivities = res.data.allFormsAndActivities;
+        setAllCompletedActivities(allActivities);
+        //setTodaysActivities(todaysEvents);
+
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
   useEffect(() => {
     GetDailyGoals();
     GetDoctor();
     GetAllPatientActivities();
+    getAllCompletedAssignments();
   }, [selectedButton]);
 
   const navigation = useNavigation();
@@ -334,15 +357,15 @@ const Dashboard = () => {
           )}
           {selectedButton == "completed" ? (
             <View>
-              {allActivities.map((goal, index) => (
+              {completedActivities.map((goal, index) => (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("GoalDetails", {
-                      id: goal.id,
-                      type: goal.type,
-                      completed: true,
-                    })
-                  }
+                  // onPress={() =>
+                  //   navigation.navigate("GoalDetails", {
+                  //     id: goal.id,
+                  //     type: goal.type,
+                  //     completed: true,
+                  //   })
+                  // }
                   style={styles.box}
                   key={index}
                 >
