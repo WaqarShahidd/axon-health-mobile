@@ -29,12 +29,15 @@ import { BASE_URL } from "../../constants/config";
 import Spinner from "react-native-loading-spinner-overlay";
 import Snack from "../../components/Snack";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
+  const navigation = useNavigation();
   const { userData } = useSelector((state) => state.user);
 
+  console.log(userData, "user");
   const [avatar, setavatar] = useState(userData?.avatar);
-  const [fullName, setfullName] = useState(userData?.fullName);
+  const [fullName, setfullName] = useState(userData?.name);
   const [email, setemail] = useState(userData?.email);
   const [gender, setgender] = useState(userData?.gender);
   const [mobile, setmobile] = useState(userData?.mobile);
@@ -100,7 +103,6 @@ const Profile = () => {
           name: fullName,
           mobile: mobile,
           email: email,
-          gender: gender,
           avatar: avatar,
         },
         {
@@ -133,7 +135,10 @@ const Profile = () => {
         onPress={() => setconfirmation(false)}
       />
 
-      <DetailScreenHeader title="Edit Profile" />
+      <DetailScreenHeader
+        title="Edit Profile"
+        backPress={() => navigation.goBack()}
+      />
 
       <ScrollView style={{ marginVertical: 40 }}>
         <View
@@ -143,20 +148,22 @@ const Profile = () => {
             justifyContent: "space-between",
           }}
         >
-          {userData?.avatar !== "" && (
-            <View style={{ flex: 0.2 }}>
-              <Image
-                source={{ uri: userData?.avatar }}
-                style={{
-                  height: 120,
-                  width: 100,
-                  borderRadius: 6,
-                  borderColor: "#59595A",
-                  borderWidth: 1,
-                }}
-              />
-            </View>
-          )}
+          <View style={{ flex: 0.15 }}>
+            <Image
+              source={
+                userData?.avatar
+                  ? { uri: userData?.avatar }
+                  : require("../../../assets/icons/user.png")
+              }
+              style={{
+                height: 100,
+                width: 90,
+                borderRadius: 6,
+                objectFit: "contain",
+              }}
+            />
+          </View>
+
           <TouchableOpacity
             style={{
               backgroundColor: "#fff",

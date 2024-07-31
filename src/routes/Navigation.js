@@ -15,6 +15,7 @@ import CheckIn from "../Screens/Daily Check-In/CheckIn";
 import Auth from "../Screens/Auth/Auth";
 import { useSelector } from "react-redux";
 import Questions from "../Screens/Questions/Questions";
+import Profile from "../Screens/Profile/Profile";
 
 const Stack = createStackNavigator();
 
@@ -53,6 +54,7 @@ const Navigation = () => {
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Help" component={Help} />
+          <Stack.Screen name="EditProfile" component={Profile} />
           <Stack.Screen
             name="Modal"
             component={ModalScreen}

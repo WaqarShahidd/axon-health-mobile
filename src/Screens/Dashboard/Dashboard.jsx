@@ -132,11 +132,6 @@ const Dashboard = () => {
       .then(async (res) => {
         setloading(false);
         const allActivity = res.data.allFormsAndActivities;
-        // setAllForms(res.data?.assignedForm);
-        // setAllActivities(res.data?.assignedActivities);
-
-        // const mergedArray = await res.data?.assignedForm.concat(res.data?.assignedActivities);
-        // const mergedArrays = await mergedArray.sort((a, b) => new Date(a.date) - new Date(b.date));
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -149,7 +144,6 @@ const Dashboard = () => {
           );
         });
 
-        // Remove today's events from the merged array
         for (let i = allActivity.length - 1; i >= 0; i--) {
           const eventDate = new Date(allActivity[i].date);
           if (
@@ -187,8 +181,6 @@ const Dashboard = () => {
         setloading(false);
         const allActivities = res.data.allFormsAndActivities;
         setAllCompletedActivities(allActivities);
-        //setTodaysActivities(todaysEvents);
-
       })
       .catch((e) => {
         setloading(false);
@@ -258,7 +250,6 @@ const Dashboard = () => {
           {selectedButton == "active" ? (
             <View>
               {/* Today Goals */}
-
               <View style={styles.header}>
                 <Text style={styles.headerText}>Today</Text>
                 <TouchableOpacity
@@ -284,6 +275,7 @@ const Dashboard = () => {
                           navigation.navigate("GoalDetails", {
                             id: goal.id,
                             type: goal.type,
+                            patientActivityId: goal?.patientActivityId,
                           })
                         }
                         style={styles.box}
@@ -338,6 +330,7 @@ const Dashboard = () => {
                         navigation.navigate("GoalDetails", {
                           id: goal.id,
                           type: goal.type,
+                          patientActivityId: goal?.patientActivityId,
                         })
                       }
                       style={styles.box}
@@ -359,13 +352,14 @@ const Dashboard = () => {
             <View>
               {completedActivities.map((goal, index) => (
                 <TouchableOpacity
-                  // onPress={() =>
-                  //   navigation.navigate("GoalDetails", {
-                  //     id: goal.id,
-                  //     type: goal.type,
-                  //     completed: true,
-                  //   })
-                  // }
+                  onPress={() =>
+                    navigation.navigate("GoalDetails", {
+                      id: goal.id,
+                      type: goal.type,
+                      completed: true,
+                      patientActivityId: goal?.patientActivityId,
+                    })
+                  }
                   style={styles.box}
                   key={index}
                 >
@@ -535,10 +529,11 @@ const styles = StyleSheet.create({
     // fontFamily: "FiraSans_400Regular",
   },
   gradient: {
+    height: 225,
+    width: 225,
     position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 200,
+    top: -50,
+    borderRadius: 360,
+    right: -50,
   },
 });

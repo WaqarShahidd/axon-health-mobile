@@ -1,30 +1,10 @@
-import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import React, { useRef, useState } from "react";
 import Dashboard from "../Screens/Dashboard/Dashboard";
-import {
-  MaterialIcons,
-  Ionicons,
-  MaterialCommunityIcons,
-  FontAwesome6,
-} from "@expo/vector-icons";
 import Appointments from "../Screens/Appointment/Appointments";
 import Insights from "../Screens/Insights/Insights";
-import Profile from "../Screens/Profile/Profile";
-import More from "../Screens/More/More";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../theme/theme";
-import Modal from "react-native-modal";
-import { moreOptions } from "../../assets/data/dummyData";
 import MoreModal from "../components/MoreModal";
 import AssesmentForms from "../Screens/Assesment Forms/AssesmentForms";
 
@@ -57,80 +37,57 @@ const BottomTabs = () => {
         name="Dashboard"
         component={Dashboard}
         options={{
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <View
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: focused ? 3 : 0,
+                borderTopColor: colors.primary,
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../../assets/icons/dashboard.png")
+                    : require("../../assets/icons/dashboard-o.png")
+                }
+                style={{ height: 28, width: 28 }}
+              />
+              <Text
                 style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderTopWidth: 3,
-                  borderTopColor: colors.primary,
+                  fontSize: 12,
+                  fontWeight: "500",
+                  // fontFamily: "FiraSans_700Bold",
+                  color: colors.secondary,
+                  marginTop: 7.5,
                 }}
               >
-                <Image
-                  source={require("../../assets/icons/dashboard.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_700Bold",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Home
-                </Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/dashboard-o.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Home
-                </Text>
-              </View>
-            ),
+                Home
+              </Text>
+            </View>
+          ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Appointment"
         component={Appointments}
         options={{
           tabBarIcon: ({ focused }) =>
-            focused ? (
-              <View
+            <View
                 style={{
                   height: "100%",
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
-                  borderTopWidth: 3,
+                  borderTopWidth: focused ? 3 : 0,
                   borderTopColor: colors.primary,
                 }}
               >
                 <Image
-                  source={require("../../assets/icons/appointment.png")}
+                  source={focused ? require("../../assets/icons/appointment.png") : require("../../assets/icons/appointment-o.png")}
                   style={{ height: 28, width: 28 }}
                 />
                 <Text
@@ -145,152 +102,83 @@ const BottomTabs = () => {
                   Appointment
                 </Text>
               </View>
-            ) : (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/appointment-o.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 11,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Appointment
-                </Text>
-              </View>
-            ),
+            
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Insights"
         component={Insights}
         options={{
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <View
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: focused ? 3 : 0,
+                borderTopColor: colors.primary,
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../../assets/icons/insight.png")
+                    : require("../../assets/icons/insight-o.png")
+                }
+                style={{ height: 28, width: 28 }}
+              />
+              <Text
                 style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderTopWidth: 3,
-                  borderTopColor: colors.primary,
+                  fontSize: 12,
+                  fontWeight: "500",
+                  // fontFamily: "FiraSans_700Bold",
+                  color: colors.secondary,
+                  marginTop: 7.5,
                 }}
               >
-                <Image
-                  source={require("../../assets/icons/insight.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_700Bold",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Insights
-                </Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/insight-o.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Insights
-                </Text>
-              </View>
-            ),
+                Insights
+              </Text>
+            </View>
+          ),
         }}
       />
       <Tab.Screen
         name="Documents"
         component={AssesmentForms}
         options={{
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <View
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: focused ? 3 : 0,
+                borderTopColor: colors.primary,
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../../assets/icons/profile.png")
+                    : require("../../assets/icons/profile-o.png")
+                }
+                style={{ height: 28, width: 28 }}
+              />
+              <Text
                 style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderTopWidth: 3,
-                  borderTopColor: colors.primary,
+                  fontSize: 12,
+                  fontWeight: "500",
+                  // fontFamily: "FiraSans_700Bold",
+                  color: colors.secondary,
+                  marginTop: 7.5,
                 }}
               >
-                <Image
-                  source={require("../../assets/icons/profile.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_700Bold",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Documents{" "}
-                </Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Image
-                  source={require("../../assets/icons/profile-o.png")}
-                  style={{ height: 28, width: 28 }}
-                />
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: "500",
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.secondary,
-                    marginTop: 7.5,
-                  }}
-                >
-                  Documents
-                </Text>
-              </View>
-            ),
+                Documents{" "}
+              </Text>
+            </View>
+          ),
         }}
       />
       <Tab.Screen

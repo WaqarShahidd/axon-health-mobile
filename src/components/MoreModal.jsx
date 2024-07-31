@@ -10,9 +10,13 @@ import React, { useRef, useState } from "react";
 import { colors } from "../theme/theme";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { clearUserData } from "../redux/dispatchers/user.dispatcher";
 
 const MoreModal = ({ modalVisible, setModalVisible }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const moreOptions = [
     // {
@@ -49,6 +53,14 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
       id: 3,
       title: "Privacy Policy",
       icon: require("../../assets/icons/forms.png"),
+    },
+    {
+      title: "Edit Profile",
+      icon: require("../../assets/icons/profile-o.png"),
+    },
+    {
+      id: 5,
+      title: "Logout",
     },
   ];
 
@@ -135,58 +147,60 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
           margin: 0,
         }}
       >
-        <View style={{ backgroundColor: "white", height: "30%" }}>
-          {/* <ScrollView
-            ref={scrollViewRef}
-            onScroll={handleOnScroll}
-            scrollEventThrottle={16}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          > */}
-            <View style={{ marginVertical: 10 }}>
-              {moreOptions.map((item, index) => (
-                <TouchableOpacity
+        <View style={{ backgroundColor: "white", height: "45%" }}>
+          <View style={{ marginVertical: 10 }}>
+            {moreOptions.map((item, index) => (
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderBottomColor: "#F7F8FA",
+                  borderBottomWidth: 1,
+                  paddingVertical: 20,
+                  paddingHorizontal: 20,
+                }}
+                key={index}
+                onPress={() => {
+                  if (item.title === "Privacy Policy") {
+                    navigation.navigate("PrivacyPolicy");
+                  } else if (item.title === "Settings") {
+                    navigation.navigate("Settings");
+                  } else if (item.title === "Help") {
+                    navigation.navigate("Help");
+                  } else if (item.title === "Activities") {
+                    navigation.navigate("Activities");
+                  } else if (item.title === "Assessment Forms") {
+                    navigation.navigate("AssesmentForms");
+                  } else if (item.title === "Daily Check-Ins") {
+                    navigation.navigate("CheckIn");
+                  } else if (item.title === "Questions") {
+                    navigation.navigate("Questions");
+                  } else if (item.title === "Logout") {
+                    dispatch(clearUserData());
+                  } else if (item.title === "Edit Profile") {
+                    navigation.navigate("EditProfile");
+                  }
+                  setModalVisible(false);
+                }}
+              >
+                {item.icon ? (
+                  <Image source={item.icon} style={{ height: 25, width: 25 }} />
+                ) : (
+                  <MaterialIcons name="logout" size={24} color="red" />
+                )}
+                <Text
                   style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    borderBottomColor: "#F7F8FA",
-                    borderBottomWidth: 1,
-                    paddingVertical: 20,
-                    paddingHorizontal: 20,
-                  }}
-                  key={index}
-                  onPress={() => {
-                    if (item.title === "Privacy Policy") {
-                      navigation.navigate("PrivacyPolicy");
-                    } else if (item.title === "Settings") {
-                      navigation.navigate("Settings");
-                    } else if (item.title === "Help") {
-                      navigation.navigate("Help");
-                    } else if (item.title === "Activities") {
-                      navigation.navigate("Activities");
-                    } else if (item.title === "Assessment Forms") {
-                      navigation.navigate("AssesmentForms");
-                    } else if (item.title === "Daily Check-Ins") {
-                      navigation.navigate("CheckIn");
-                    } else if (item.title === "Questions") {
-                      navigation.navigate("Questions");
-                    }
-                    setModalVisible(false);
+                    fontSize: 18,
+                    // fontFamily: "FiraSans_400Regular",
+                    color: colors.textClr,
+                    marginLeft: 10,
                   }}
                 >
-                  <Image source={item.icon} style={{ height: 25, width: 25 }} />
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      // fontFamily: "FiraSans_400Regular",
-                      color: colors.textClr,
-                      marginLeft: 10,
-                    }}
-                  >
-                    {item.title}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+                  {item.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
           {/* </ScrollView> */}
         </View>
       </Modal>
