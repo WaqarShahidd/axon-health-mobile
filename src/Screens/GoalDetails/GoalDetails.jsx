@@ -64,12 +64,13 @@ const GoalDetails = ({ route }) => {
     console.log("GetPatientActivityDetail");
     setloading(true);
     await axios
-      .get(`${BASE_URL}/activity/getActivityDetails?activityId=${id}`, {
+      .get(`${BASE_URL}/activity/getActivityDetailsForPatient?activityId=${id}&patientActivityId=${patientActivityId}`, {
         withCredentials: true,
       })
       .then(async (res) => {
         setloading(false);
-        setActivityDetail(res.data.activitySite);
+        setAnswers(res?.data?.activitySite?.patient_activities?.answer)
+        setActivityDetail(res?.data?.activitySite);
       })
       .catch((e) => {
         console.log(e);
@@ -104,6 +105,30 @@ const GoalDetails = ({ route }) => {
         `${BASE_URL}/patient_form/setPatientFormAnswers`,
         {
           patientFormAnswer: answers,
+          status: "completed",
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(async (res) => {
+        setloading(false);
+        navigation.goBack();
+      })
+      .catch((e) => {
+        console.log(e, "post answer error");
+        setloading(false);
+      });
+  };
+
+  const PostActivityAnswer = async () => {
+    setloading(true);
+    await axios
+      .post(
+        `${BASE_URL}/patient_activity/setAnswerForPatient`,
+        {
+          answer: selectedOption,
+          patientActivityId:patientActivityId,
           status: "completed",
         },
         {
@@ -189,14 +214,30 @@ const GoalDetails = ({ route }) => {
             marginBottom: 20,
           }}
         >
-          <CustomBtn
-            text="Mark Goal Completed"
-            onPress={() => {
-              if (answers.length > 0) {
-                PostAnswer();
-              }
-            }}
-          />
+        {
+                route?.params?.type === "Daily Activity" ||
+                route?.params?.type === "Daily Check-In Questions"
+                ? (
+                  <CustomBtn
+                  text="Mark Goal Completed"
+                  onPress={() => {
+                    if (selectedOption!='') {
+                      PostActivityAnswer();
+                    }
+                  }}
+                />
+      
+                ) :
+                <CustomBtn
+                text="Mark Goal Completed"
+                onPress={() => {
+                  if (answers.length > 0) {
+                    PostAnswer();
+                  }
+                }}
+              />
+             
+        }
         </View>
       )}
     </KeyboardAvoidingView>
