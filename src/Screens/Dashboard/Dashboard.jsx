@@ -15,9 +15,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
-import CustomBtn from "../../components/CustomBtn";
-import Spinner from "react-native-loading-spinner-overlay";
-import Snack from "../../components/Snack";
 import { useSelector } from "react-redux";
 
 const Dashboard = () => {
@@ -26,19 +23,6 @@ const Dashboard = () => {
   const handleButtonPress = (button) => {
     setSelectedButton(button);
   };
-
-  const goalCardData = [
-    {
-      title: "Today",
-      cardText: "Connect with someone in recovery on an emotional level",
-    },
-    { title: "Today", cardText: "Next 1:1 Counselling Session" },
-    {
-      title: "This Week",
-      cardText: "Connect with my sponsor on an emotional level",
-    },
-    { title: "This Week", cardText: "Attend a group therapy session" },
-  ];
 
   const [isTodayCollapsed, setIsTodayCollapsed] = useState(false);
   const [isWeekCollapsed, setIsWeekCollapsed] = useState(false);
