@@ -54,8 +54,9 @@ const Dashboard = () => {
   };
 
   const toggleBtns = [
-    { id: 1, text: "Active Goals", value: "active" },
-    { id: 2, text: "Completed Goals", value: "completed" },
+    { id: 1, text: "Active", value: "active" },
+    { id: 2, text: "Future", value: "future" },
+    { id: 3, text: "Past", value: "past" },
   ];
 
   const { userData } = useSelector((state) => state.user);
@@ -152,6 +153,13 @@ const Dashboard = () => {
           ) {
             allActivity.splice(i, 1);
           }
+          if(eventDate<today || allActivity[i].patientActivityStatus==='completed')
+          {
+            await setAllCompletedActivities([...completedActivities,allActivity[i]]);
+            allActivity.splice(i, 1);
+
+          }
+          
         }
 
         if (todaysEvents.length == 0) {
@@ -180,19 +188,27 @@ const Dashboard = () => {
       .then(async (res) => {
         setloading(false);
         const allActivities = res.data.allFormsAndActivities;
-        setAllCompletedActivities(allActivities);
+        console.log('allActivities',allActivities);
+        if(allActivities.length>=0)
+        {
+          for (let i = 0; i <= allActivities.length; i++) {
+            console.log('allActivities',allActivities[i]);
+//          setAllCompletedActivities([...completedActivities,allActivities[i]]);
+          }
+        }
+        // setAllCompletedActivities(allActivities);
       })
       .catch((e) => {
         setloading(false);
       });
   };
-
+  console.log('completedActivities',completedActivities);
   useEffect(() => {
     GetDailyGoals();
     GetDoctor();
     GetAllPatientActivities();
     getAllCompletedAssignments();
-  }, [selectedButton]);
+  }, []);
 
   const navigation = useNavigation();
 
@@ -211,10 +227,10 @@ const Dashboard = () => {
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {selectedButton === "active" ? (
-          <Header title="Today's Goals" />
-        ) : (
-          <Header title="Completed Goals" />
-        )}
+          <Header title="Today's Activities" />
+        ) : selectedButton === "past" ? (
+          <Header title="Past Activities" />
+        ):<Header title="Future Activities"></Header>}
         <View
           style={{
             marginHorizontal: 20,
@@ -223,9 +239,9 @@ const Dashboard = () => {
         >
           {/* Goals Btn */}
           <View style={styles.btnContainer}>
-            {toggleBtns.map((btn) => (
+            {toggleBtns?.map((btn, index) => (
               <TouchableOpacity
-                key={btn.id}
+                key={index}
                 style={
                   selectedButton === btn.value
                     ? styles.selectedButton
@@ -247,11 +263,11 @@ const Dashboard = () => {
           </View>
 
           {/* Accordions */}
-          {selectedButton == "active" ? (
+          {selectedButton === "active" ? (
             <View>
               {/* Today Goals */}
               <View style={styles.header}>
-                <Text style={styles.headerText}>Today</Text>
+                <Text style={styles.headerText}>Active</Text>
                 <TouchableOpacity
                   style={styles.collapseButton}
                   onPress={toggleTodayCollapse}
@@ -267,9 +283,9 @@ const Dashboard = () => {
                 </TouchableOpacity>
               </View>
               {!isTodayCollapsed ? (
-                todaysActivities.length != 0 ? (
+                todaysActivities?.length != 0 ? (
                   <View>
-                    {todaysActivities.map((goal, index) => (
+                    {todaysActivities?.map((goal, index) => (
                       <TouchableOpacity
                         onPress={() =>
                           navigation.navigate("GoalDetails", {
@@ -278,7 +294,9 @@ const Dashboard = () => {
                             patientActivityId: goal?.patientActivityId,
                           })
                         }
-                        style={styles.box}
+                        style={[styles.greyBox, {
+                          backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                        }]}                        
                         key={index}
                       >
                         {/* <View style={styles.box} key={index}> */}
@@ -286,6 +304,10 @@ const Dashboard = () => {
                         <Text style={styles.remainingText}>
                           {"Assigned By: " + goal?.assignedBy?.name}
                         </Text>
+                        <Text style={styles.remainingText}>
+                    {"Date: " + goal?.date?.split('T')[0]}
+                  </Text>
+
                         {/* </View> */}
                       </TouchableOpacity>
                     ))}
@@ -304,10 +326,10 @@ const Dashboard = () => {
           )}
 
           {/* This Week Goals */}
-          {selectedButton == "active" ? (
+          {selectedButton == "future" ? (
             <View>
               <View style={styles.header}>
-                <Text style={styles.headerText}>This Week</Text>
+                <Text style={styles.headerText}>Future Activities</Text>
                 <TouchableOpacity
                   style={styles.collapseButton}
                   onPress={toggleWeekCollapse}
@@ -324,22 +346,28 @@ const Dashboard = () => {
               </View>
               {!isWeekCollapsed && (
                 <View>
-                  {allActivities.map((goal, index) => (
+                  {allActivities?.map((goal, index) => (
                     <TouchableOpacity
                       onPress={() =>
                         navigation.navigate("GoalDetails", {
-                          id: goal.id,
-                          type: goal.type,
+                          id: goal?.id,
+                          type: goal?.type,
                           patientActivityId: goal?.patientActivityId,
                         })
                       }
-                      style={styles.box}
+                      style={[styles.greyBox, {
+                        backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                      }]}                      
                       key={index}
                     >
-                      <Text style={styles.boxText}>{goal.name}</Text>
+                      <Text style={styles?.boxText}>{goal?.name}</Text>
                       <Text style={styles.remainingText}>
                         {"Assigned By: " + goal?.assignedBy?.name}
                       </Text>
+                      <Text style={styles.remainingText}>
+                    {"Date: " + goal?.date?.split('T')[0]}
+                  </Text>
+
                     </TouchableOpacity>
                   ))}
                 </View>
@@ -348,33 +376,47 @@ const Dashboard = () => {
           ) : (
             ""
           )}
-          {selectedButton == "completed" ? (
+          {selectedButton === "past" ? (
             <View>
-              {completedActivities.map((goal, index) => (
+
+              <View style={styles.header}>
+                      <Text style={styles?.headerText}>Past Activities</Text>
+                </View>              
+              {completedActivities.map((goal, index) => {
+                return (
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("GoalDetails", {
-                      id: goal.id,
-                      type: goal.type,
+                      id: goal?.id,
+                      type: goal?.type,
                       completed: true,
                       patientActivityId: goal?.patientActivityId,
                     })
+//                    getAllCompletedAssignments()
                   }
-                  style={styles.box}
+                  style={[styles.greyBox, {
+                    backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                  }]}
+                  
                   key={index}
                 >
-                  <Text style={styles.boxText}>{goal.name}</Text>
+                  <Text style={styles.boxText}>{goal?.name}</Text>
                   <Text style={styles.remainingText}>
                     {"Assigned By: " + goal?.assignedBy?.name}
                   </Text>
+                  <Text style={styles.remainingText}>
+                    {"Date: " + goal?.date?.split('T')[0]}
+                  </Text>
                 </TouchableOpacity>
-              ))}
+                )
+              
+              })}
             </View>
           ) : (
             ""
           )}
           {/* Your Therapist */}
-          <View style={{ justifyContent: "center" }}>
+          {/* <View style={{ justifyContent: "center" }}>
             <View style={styles.box}>
               <Text
                 style={{
@@ -441,7 +483,7 @@ const Dashboard = () => {
                 width: 135,
               }}
             />
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </View>
@@ -459,7 +501,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   button: {
-    width: "50%",
+    width: "30%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "transparent",
@@ -467,7 +509,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   selectedButton: {
-    width: "50%",
+    width: "40%",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
@@ -508,7 +550,12 @@ const styles = StyleSheet.create({
     // fontFamily: "FiraSans_400Regular",
   },
   box: {
-    backgroundColor: "#fff",
+    borderRadius: 20,
+    padding: 18,
+    marginTop: 20,
+    position: "relative",
+  },
+  greyBox: {
     borderRadius: 20,
     padding: 18,
     marginTop: 20,

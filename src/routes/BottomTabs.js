@@ -106,44 +106,6 @@ const BottomTabs = () => {
         }}
       /> */}
       <Tab.Screen
-        name="Insights"
-        component={Insights}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                height: "100%",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                borderTopWidth: focused ? 3 : 0,
-                borderTopColor: colors.primary,
-              }}
-            >
-              <Image
-                source={
-                  focused
-                    ? require("../../assets/icons/insight.png")
-                    : require("../../assets/icons/insight-o.png")
-                }
-                style={{ height: 28, width: 28 }}
-              />
-              <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: "500",
-                  // fontFamily: "FiraSans_700Bold",
-                  color: colors.secondary,
-                  marginTop: 7.5,
-                }}
-              >
-                Insights
-              </Text>
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
         name="Documents"
         component={AssesmentForms}
         options={{
@@ -176,6 +138,45 @@ const BottomTabs = () => {
                 }}
               >
                 Documents{" "}
+              </Text>
+            </View>
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="Insights"
+        component={Insights}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <View
+              style={{
+                height: "100%",
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTopWidth: focused ? 3 : 0,
+                borderTopColor: colors.primary,
+              }}
+            >
+              <Image
+                source={
+                  focused
+                    ? require("../../assets/icons/insight.png")
+                    : require("../../assets/icons/insight-o.png")
+                }
+                style={{ height: 28, width: 28 }}
+              />
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontWeight: "500",
+                  // fontFamily: "FiraSans_700Bold",
+                  color: colors.secondary,
+                  marginTop: 7.5,
+                }}
+              >
+                My Therapist
               </Text>
             </View>
           ),

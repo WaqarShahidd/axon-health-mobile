@@ -16,6 +16,7 @@ import Auth from "../Screens/Auth/Auth";
 import { useSelector } from "react-redux";
 import Questions from "../Screens/Questions/Questions";
 import Profile from "../Screens/Profile/Profile";
+import PDFViewer from "../components/PDFViewer";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,7 @@ const Navigation = () => {
               presentation: "modal",
             }}
           />
+          <Stack.Screen name="PDFViewer" component={PDFViewer} />
         </Stack.Group>
       ) : (
         <Stack.Screen name="Login" component={Auth} />

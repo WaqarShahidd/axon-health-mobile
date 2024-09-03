@@ -39,23 +39,23 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
     //   title: "Questions",
     //   icon: require("../../assets/icons/forms.png"),
     // },
-    {
-      id: 1,
-      title: "Settings",
-      icon: require("../../assets/icons/settings.png"),
-    },
-    {
-      id: 2,
-      title: "Help",
-      icon: require("../../assets/icons/help.png"),
-    },
+    // {
+    //   id: 1,
+    //   title: "Settings",
+    //   icon: require("../../assets/icons/settings.png"),
+    // },
+    // {
+    //   id: 2,
+    //   title: "Help",
+    //   icon: require("../../assets/icons/help.png"),
+    // },
     {
       id: 3,
       title: "Privacy Policy",
       icon: require("../../assets/icons/forms.png"),
     },
     {
-      title: "Edit Profile",
+      title: "Settings",
       icon: require("../../assets/icons/profile-o.png"),
     },
     {
@@ -147,7 +147,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
           margin: 0,
         }}
       >
-        <View style={{ backgroundColor: "white", height: "45%" }}>
+        <View style={{ backgroundColor: "white", height: "30%" }}>
           <View style={{ marginVertical: 10 }}>
             {moreOptions.map((item, index) => (
               <TouchableOpacity
@@ -163,9 +163,10 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                 onPress={() => {
                   if (item.title === "Privacy Policy") {
                     navigation.navigate("PrivacyPolicy");
-                  } else if (item.title === "Settings") {
-                    navigation.navigate("Settings");
-                  } else if (item.title === "Help") {
+                  } //else if (item.title === "Settings") {
+                  //   navigation.navigate("Settings");
+                  // } 
+                  else if (item.title === "Help") {
                     navigation.navigate("Help");
                   } else if (item.title === "Activities") {
                     navigation.navigate("Activities");
@@ -177,7 +178,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                     navigation.navigate("Questions");
                   } else if (item.title === "Logout") {
                     dispatch(clearUserData());
-                  } else if (item.title === "Edit Profile") {
+                  } else if (item.title === "Settings") {
                     navigation.navigate("EditProfile");
                   }
                   setModalVisible(false);

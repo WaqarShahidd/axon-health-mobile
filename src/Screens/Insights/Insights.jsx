@@ -5,12 +5,16 @@ import {
   StyleSheet,
   Text,
   View,
+  Image
 } from "react-native";
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { colors, gradient } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
 import { PieChart } from "react-native-chart-kit";
+import axios from "axios";
+import { BASE_URL } from "../../constants/config";
+import { useSelector } from "react-redux";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -142,6 +146,31 @@ const Insights = () => {
       </>
     );
   };
+  const [doctor, setdoctor] = useState({});
+  const { userData } = useSelector((state) => state.user);
+  const [loading, setloading] = useState(false);
+
+  const GetDoctor = async (e) => {
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/doctor_patient/getAssignedDoctorWithPatientId?patientId=${userData?.id}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        setloading(false);
+        setdoctor(res.data?.allPatientsDoctors?.assignedDoctor);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
+
+  useEffect(() => {
+    GetDoctor();
+  }, []);
 
   return (
     <View
@@ -157,9 +186,82 @@ const Insights = () => {
       />
 
       <ScrollView>
-        <Header title="Your Insights" />
-
-        {renderItem()}
+        <Header title="My Therapist" />
+          <View style={{ justifyContent: "center" }}>
+            <View style={styles.box}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  lineHeight: 24,
+                  color: colors.textClr,
+                  // fontFamily: "FiraSans_700Bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                Your Therapist
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 10,
+                }}
+              >
+                <Image
+                  source={doctor?.avatar != '' ? {uri:doctor?.avatar} : require("../../../assets/images/user.png")}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 360,
+                    marginRight: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    paddingVertical: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "500",
+                      lineHeight: 24,
+                      color: colors.textClr,
+                      // fontFamily: "FiraSans_700Bold",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    DR. {doctor?.name}
+                  </Text>
+                  {/* <Text style={styles.remainingText}>
+                    {doctor?.doctorType}
+                  </Text> */}
+                  <Text style={styles.remainingText}>
+                    {doctor?.email}
+                  </Text>
+                  <Text style={styles.remainingText}>
+                    {doctor?.mobile}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Image
+              source={require("../../../assets/icons/user-doctor.png")}
+              style={{
+                height: 135,
+                resizeMode: "contain",
+                justifyContent: "center",
+                position: "absolute",
+                right: 0,
+                zIndex: 0,
+                width: 135,
+              }}
+            />
+          </View>
+        {/* {renderItem()} */}
       </ScrollView>
     </View>
   );
@@ -205,4 +307,19 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 5,
   },
+  box: {
+    backgroundColor:"#fff",
+    borderRadius: 30,
+    padding: 18,
+    marginTop: 20,
+    position: "relative",
+  },
+  boxText: {
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 24,
+    maxWidth: "80%",
+    // fontFamily: "FiraSans_400Regular",
+  },
+
 });

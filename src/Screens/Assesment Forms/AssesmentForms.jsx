@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import * as FileSystem from 'expo-file-system';
 import * as Linking from 'expo-linking';
 import * as Sharing from 'expo-sharing';
+import PDFViewer from "../../components/PDFViewer";
 
 const toggleBtns = [
   { id: 1, text: "Active Assignments", value: "active" },
@@ -191,7 +192,7 @@ const AssesmentForms = () => {
           </View> */}
 
           {/* Draft Items */}
-          <FlatList
+          {/* <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
             data={allDocuments}
@@ -245,7 +246,7 @@ const AssesmentForms = () => {
                 </Text>
               </TouchableOpacity>
             )}
-          />
+          /> */}
 
           {/* All Items */}
           <View
@@ -271,7 +272,7 @@ const AssesmentForms = () => {
               >
                 All Items ({allDocuments.length})
               </Text>
-              <Text
+              {/* <Text
                 style={{
                   color: colors.primary,
                   fontSize: 14,
@@ -279,12 +280,18 @@ const AssesmentForms = () => {
                 }}
               >
                 See All
-              </Text>
+              </Text> */}
             </View>
 
-            {allDocuments.map((item, index) => (
-              <View
-              onPress={() => downloadFile(item.document_url,item.documentName)}
+            {allDocuments?.map((item, index) => (
+              <TouchableOpacity
+              //onPress={() => navigation.navigate('PDFViewer', { source: item?.document_url })}
+
+              onPress={() => 
+                // <PDFViewer source={item.document_url} />
+                 downloadFile(item?.document_url,item?.documentName)
+                //console.log(item)
+              }
 
                 style={{
                   flexDirection: "row",
@@ -324,9 +331,13 @@ const AssesmentForms = () => {
                     maxWidth: "80%",
                   }}
                 >
-                  {item?.documentName}
+                  Name: {item?.documentName} {"\n"}{"\n"}
+                  Date: {item?.updatedAt?.split('T')[0]}
+
                 </Text>
-              </View>
+                {/* <Text style={styles.remainingText}>
+                </Text> */}
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -373,5 +384,12 @@ const styles = StyleSheet.create({
     // fontFamily: "FiraSans_700Bold",
     color: colors.textClr,
     fontWeight: "800",
+  },
+  remainingText: {
+    fontSize: 12,
+    fontWeight: "400",
+    color: "#596066",
+    marginTop: 10,
+    // fontFamily: "FiraSans_400Regular",
   },
 });

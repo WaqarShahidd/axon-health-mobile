@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useSelector } from "react-redux";
+import { colors } from "../theme/theme";
 
 const { fontScale } = Dimensions.get("window");
 
@@ -20,7 +21,7 @@ const Header = ({ title }) => {
         marginHorizontal: 20,
       }}
     >
-     {title=="Today's Goals" && ( <View
+     {/* {title=="Today's Goals" && ( <View
         style={{
           position: "relative",
           backgroundColor: "grey",
@@ -42,7 +43,7 @@ const Header = ({ title }) => {
             objectFit: "contain",
           }}
         />
-        {/* <View
+         <View
           style={{
             position: "absolute",
             bottom: 0,
@@ -57,19 +58,31 @@ const Header = ({ title }) => {
             size={15}
             color={colors.primary}
           />
-        </View> */}
-      </View>)}
+        </View> 
+      </View>)} */}
       <View>
-      {title=="Today's Goals" && ( <Text
+      {/* <Text
           style={{
             fontSize: 24,
             fontWeight: "bold",
-            color: "#333742",
+            color:colors.primary,
             marginTop: 10,
             // fontFamily: "FiraSans_700Bold",
           }}
         >
-          Hi, Welcome back!
+          Hi, {userData?.name}
+        </Text> */}
+
+      {title=="Today's Activities" && ( <Text
+          style={{
+            fontSize: 24,
+            fontWeight: "bold",
+            color:colors.primary,
+            marginTop: 10,
+            // fontFamily: "FiraSans_700Bold",
+          }}
+        >
+          Hi, {userData?.name}
         </Text>)}
         <View
           style={{

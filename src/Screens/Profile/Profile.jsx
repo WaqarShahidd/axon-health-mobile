@@ -14,7 +14,7 @@ import DetailScreenHeader from "../../components/DetailScreenHeader";
 import { colors, gradient } from "../../theme/theme";
 import Header from "../../components/Header";
 import { LinearGradient } from "expo-linear-gradient";
-import { CustomInput } from "../../components/CustomInput";
+import { CustomInput, CustomPasswordInput } from "../../components/CustomInput";
 import {
   MaterialIcons,
   MaterialCommunityIcons,
@@ -42,8 +42,15 @@ const Profile = () => {
   const [gender, setgender] = useState(userData?.gender);
   const [mobile, setmobile] = useState(userData?.mobile);
 
+
+  const [oldPassword, setoldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setconfirmPassword] = useState('');
+
   const [loading, setloading] = useState(false);
   const [confirmation, setconfirmation] = useState(false);
+  const [errorConfirmation, seterrorConfirmation] = useState(false);
+  const [errorMsg, seterrorMsg] = useState('');
 
   const dispatch = useDispatch();
 
@@ -95,29 +102,66 @@ const Profile = () => {
 
   const UpdateUser = async () => {
     setloading(true);
-    await axios
-      .post(
-        `${BASE_URL}/user/updateUser`,
-        {
-          userId: userData?.id,
-          name: fullName,
-          mobile: mobile,
-          email: email,
-          avatar: avatar,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
+    if(userData?.email != email || userData.mobile != mobile)
+    {
+      await axios
+        .post(
+          `${BASE_URL}/user/updateUser`,
+          {
+            userId: userData?.id,
+            name: fullName,
+            mobile: mobile,
+            email: email,
+            avatar: avatar,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          setloading(false);
+          dispatch(getUserById(userData?.id));
+          setconfirmation(true);
+        })
+        .catch((e) => {
+          setloading(false);
+          setconfirmation(false);
+        });
+    }
+    if(newPassword != '')
+    {
+      if(newPassword === confirmPassword)
+      {
+        await axios
+        .post(
+          `${BASE_URL}/user/updatePassword`,
+          {
+            userId: userData?.id,
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+          },
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          setloading(false);
+          dispatch(getUserById(userData?.id));
+          setconfirmation(true);
+        })
+        .catch((e) => {
+          setloading(false);
+          seterrorConfirmation(true);
+          seterrorMsg('Something went wrong.')
+        });
+      }
+      else{
         setloading(false);
-        dispatch(getUserById(userData?.id));
-        setconfirmation(true);
-      })
-      .catch((e) => {
-        setloading(false);
-        setconfirmation(false);
-      });
+        seterrorConfirmation(true);
+        seterrorMsg('New Password & Confirm Password Mismatched.')
+
+      }
+    }
   };
 
   return (
@@ -134,14 +178,20 @@ const Profile = () => {
         error={false}
         onPress={() => setconfirmation(false)}
       />
+      <Snack
+        visible={errorConfirmation}
+        title={errorMsg}
+        error={true}
+        onPress={() => seterrorConfirmation(false)}
+      />
 
       <DetailScreenHeader
-        title="Edit Profile"
+        title="Settings"
         backPress={() => navigation.goBack()}
       />
 
       <ScrollView style={{ marginVertical: 40 }}>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -190,17 +240,17 @@ const Profile = () => {
               Upload Picture
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View>
-          <CustomInput
+          {/* <CustomInput
             placeholder="Full Name"
             value={fullName}
             setValue={setfullName}
             noCap={true}
             Icon={MaterialIcons}
             iconName="person-outline"
-          />
+          /> */}
           <CustomInput
             placeholder="Email"
             value={email}
@@ -220,9 +270,43 @@ const Profile = () => {
             iconName="phone-outline"
           />
         </View>
+
+        <View>
+          <View style={styles.header}>
+              <Text style={styles.headerText}>Update Password</Text>
+          </View>
+          <CustomPasswordInput
+            placeholder="Old Password"
+            value={oldPassword}
+            setValue={setoldPassword}
+            noCap={true}
+            Icon={MaterialCommunityIcons}
+            iconName=""
+          />
+          <CustomPasswordInput
+            placeholder="New Password"
+            value={newPassword}
+            setValue={setNewPassword}
+            
+            noCap={true}
+            Icon={MaterialCommunityIcons}
+            iconName=""
+          />
+          <CustomPasswordInput
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            setValue={setconfirmPassword}
+            
+            noCap={true}
+            Icon={MaterialCommunityIcons}
+            iconName="password"
+          />
+
+        </View>
       </ScrollView>
+  
       <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
-        <CustomBtn text="Update" onPress={UpdateUser} />
+        <CustomBtn text="Update Password" onPress={UpdateUser} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -246,4 +330,16 @@ const styles = StyleSheet.create({
     borderRadius: 360,
     right: -50,
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 30,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "600",
+    // fontFamily: "FiraSans_700Bold",
+  },
+
 });
