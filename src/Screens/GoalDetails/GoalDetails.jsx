@@ -54,6 +54,8 @@ const GoalDetails = ({ route }) => {
   const { userData } = useSelector((state) => state.user);
   const navigation = useNavigation();
 
+  const activtyOptions = ["Yes", "No"];
+
   const [loading, setloading] = useState(false);
   const [activityDetail, setActivityDetail] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -64,13 +66,19 @@ const GoalDetails = ({ route }) => {
     console.log("GetPatientActivityDetail");
     setloading(true);
     await axios
-      .get(`${BASE_URL}/activity/getActivityDetailsForPatient?activityId=${id}&patientActivityId=${patientActivityId}`, {
-        withCredentials: true,
-      })
+      .get(
+        `${BASE_URL}/activity/getActivityDetailsForPatient?activityId=${id}&patientActivityId=${patientActivityId}`,
+        {
+          withCredentials: true,
+        }
+      )
       .then(async (res) => {
         setloading(false);
-        setAnswers(res?.data?.activitySite?.patient_activities?.answer)
         setActivityDetail(res?.data?.activitySite);
+        res.data?.activitySite, "activityDetail";
+        setSelectedOption(
+          res.data?.activitySite?.patient_activities[0]?.answer
+        );
       })
       .catch((e) => {
         console.log(e);
@@ -128,7 +136,7 @@ const GoalDetails = ({ route }) => {
         `${BASE_URL}/patient_activity/setAnswerForPatient`,
         {
           answer: selectedOption,
-          patientActivityId:patientActivityId,
+          patientActivityId: patientActivityId,
           status: "completed",
         },
         {
@@ -155,8 +163,6 @@ const GoalDetails = ({ route }) => {
       GetPatientFormDetail();
     }
   }, []);
-
-  const activtyOptions = ["Yes", "No"];
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -214,30 +220,26 @@ const GoalDetails = ({ route }) => {
             marginBottom: 20,
           }}
         >
-        {
-                route?.params?.type === "Daily Activity" ||
-                route?.params?.type === "Daily Check-In Questions"
-                ? (
-                  <CustomBtn
-                  text="Mark Goal Completed"
-                  onPress={() => {
-                    if (selectedOption!='') {
-                      PostActivityAnswer();
-                    }
-                  }}
-                />
-      
-                ) :
-                <CustomBtn
-                text="Mark Goal Completed"
-                onPress={() => {
-                  if (answers.length > 0) {
-                    PostAnswer();
-                  }
-                }}
-              />
-             
-        }
+          {route?.params?.type === "Daily Activity" ||
+          route?.params?.type === "Daily Check-In Questions" ? (
+            <CustomBtn
+              text="Mark Goal Completed"
+              onPress={() => {
+                if (selectedOption != "") {
+                  PostActivityAnswer();
+                }
+              }}
+            />
+          ) : (
+            <CustomBtn
+              text="Mark Goal Completed"
+              onPress={() => {
+                if (answers.length > 0) {
+                  PostAnswer();
+                }
+              }}
+            />
+          )}
         </View>
       )}
     </KeyboardAvoidingView>

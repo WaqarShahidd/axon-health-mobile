@@ -6,7 +6,7 @@ import Insights from "../Screens/Insights/Insights";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../theme/theme";
 import MoreModal from "../components/MoreModal";
-import AssesmentForms from "../Screens/Assesment Forms/AssesmentForms";
+import Documents from "../Screens/Documents/Documents";
 
 const Tab = createBottomTabNavigator();
 
@@ -107,7 +107,7 @@ const BottomTabs = () => {
       /> */}
       <Tab.Screen
         name="Documents"
-        component={AssesmentForms}
+        component={Documents}
         options={{
           tabBarIcon: ({ focused }) => (
             <View

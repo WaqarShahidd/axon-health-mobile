@@ -6,38 +6,28 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,PermissionsAndroid, Platform
+  Alert,
+  PermissionsAndroid,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors, gradient } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
-import { draftItemData } from "../../../assets/data/dummyData";
-import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 import { useSelector } from "react-redux";
-import * as FileSystem from 'expo-file-system';
-import * as Linking from 'expo-linking';
-import * as Sharing from 'expo-sharing';
-import PDFViewer from "../../components/PDFViewer";
+import * as FileSystem from "expo-file-system";
+import * as Linking from "expo-linking";
+import * as Sharing from "expo-sharing";
+import Spinner from "react-native-loading-spinner-overlay";
+import { Feather } from "@expo/vector-icons";
 
-const toggleBtns = [
-  { id: 1, text: "Active Assignments", value: "active" },
-  { id: 2, text: "History Assignments", value: "history" },
-];
-
-const AssesmentForms = () => {
-  const navigation = useNavigation();
+const Documents = () => {
   const { userData } = useSelector((state) => state.user);
 
-  const [selectedButton, setSelectedButton] = useState("active");
   const [allDocuments, setAllDocuments] = useState([]);
   const [loading, setloading] = useState(false);
-
-  const handleButtonPress = (button) => {
-    setSelectedButton(button);
-  };
 
   const getAllDocuments = async (e) => {
     setloading(true);
@@ -59,78 +49,88 @@ const AssesmentForms = () => {
 
   async function downloadFile(url, filename) {
     const hasPermission = await requestStoragePermission();
-  if (!hasPermission) {
-    Alert.alert('Permission Denied', 'Cannot download the file without storage permission.');
-    return;
-  }
+    if (!hasPermission) {
+      Alert.alert(
+        "Permission Denied",
+        "Cannot download the file without storage permission."
+      );
+      return;
+    }
     try {
       // Define the file path
       const fileUri = `${FileSystem.documentDirectory}${filename}`;
-  
+
       // Start the download
-//      console.log(url);
+      //      console.log(url);
       const { uri } = await FileSystem.downloadAsync(url, fileUri);
       if (await Sharing.isAvailableAsync()) {
         // Share the file
         await Sharing.shareAsync(uri);
       } else {
         // Fallback: Try to open the file with an external app
-        Alert.alert('Sharing not available', 'Opening the file with an external app.');
+        Alert.alert(
+          "Sharing not available",
+          "Opening the file with an external app."
+        );
         await Linking.openURL(uri);
       }
-    //   console.log(uri);
+      //   console.log(uri);
 
-    //   const fileInfo = await FileSystem.getInfoAsync(uri);
-    //   console.log(fileInfo);
+      //   const fileInfo = await FileSystem.getInfoAsync(uri);
+      //   console.log(fileInfo);
 
-    // if (fileInfo.exists) {
-    //   await Linking.openURL(encodeURI(fileInfo.uri));
-    // }
-    // else{
-    //   console.error('File does not exist at:', uri);
-    //   Alert.alert('Download failed', 'File does not exist after download.');
-    //   return;
+      // if (fileInfo.exists) {
+      //   await Linking.openURL(encodeURI(fileInfo.uri));
+      // }
+      // else{
+      //   console.error('File does not exist at:', uri);
+      //   Alert.alert('Download failed', 'File does not exist after download.');
+      //   return;
 
-    // }
+      // }
 
-    // const formattedUri = encodeURI(uri);
-    // console.log(formattedUri);
+      // const formattedUri = encodeURI(uri);
+      // console.log(formattedUri);
 
-    // const canOpen = await Linking.canOpenURL(formattedUri);
-    // console.log(canOpen);
+      // const canOpen = await Linking.canOpenURL(formattedUri);
+      // console.log(canOpen);
 
-    // if (canOpen) {
-    //   await Linking.openURL(formattedUri);
-    // } else {
-    //   console.error("Can't open URL:", formattedUri);
-    //   Alert.alert('Open failed', 'Unable to open the file.');
-    // }
+      // if (canOpen) {
+      //   await Linking.openURL(formattedUri);
+      // } else {
+      //   console.error("Can't open URL:", formattedUri);
+      //   Alert.alert('Open failed', 'Unable to open the file.');
+      // }
     } catch (error) {
       // Handle errors
-      console.error('Download error:', error);
-      Alert.alert('Download failed', 'There was an error downloading the file.');
+      console.error("Download error:", error);
+      Alert.alert(
+        "Download failed",
+        "There was an error downloading the file."
+      );
     }
   }
+
   async function requestStoragePermission() {
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           {
-            title: 'Storage Permission Required',
+            title: "Storage Permission Required",
             message:
-              'This app needs access to your storage to download and open files.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
+              "This app needs access to your storage to download and open files.",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK",
           }
         );
-  
+
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('You can use the storage');
+          console.log("You can use the storage");
           return true;
         } else {
-          console.log('Storage permission denied');
+          console.log("Storage permission denied");
           return false;
         }
       } catch (err) {
@@ -142,9 +142,10 @@ const AssesmentForms = () => {
       return true;
     }
   }
+
   useEffect(() => {
     getAllDocuments();
-  }, [allDocuments]);
+  }, []);
 
   return (
     <View
@@ -154,6 +155,7 @@ const AssesmentForms = () => {
         paddingTop: "10%",
       }}
     >
+      <Spinner visible={loading} />
       <LinearGradient
         colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
         style={gradient}
@@ -196,10 +198,13 @@ const AssesmentForms = () => {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={allDocuments}
+            contentContainerStyle={{ paddingRight: 20 }}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => (
               <TouchableOpacity
-                 onPress={() => downloadFile(item.document_url,item.documentName)}
+                onPress={() =>
+                  downloadFile(item.document_url, item.documentName)
+                }
                 style={{
                   width: 120,
                   height: 125,
@@ -211,28 +216,10 @@ const AssesmentForms = () => {
                   marginLeft: index === 0 ? 20 : 10,
                 }}
               >
-                {item?.documentName?.includes('pdf')?
-                <>
-                
-                    <Image
-                        source={require('../../../assets/icons/pdf.png')}
-                        style={{ height: 42, width: 42, marginBottom: 5 }}
-                      /></>
-                      : item.document_url.includes('docx')?
-                      <Image
-                      source={require('../../../assets/icons/word.png')}
-                      style={{ height: 42, width: 42, marginBottom: 5 }}
-                    />
-                    : item.document_url.includes('pptx')?
-                    <Image
-                    source={require('../../../assets/icons/powerpoint.png')}
-                    style={{ height: 42, width: 42, marginBottom: 5 }}
-                  />  
-                   :
-                   <Image
-                   source={require('../../../assets/icons/excel.png')}
+                <Image
+                  source={require("../../../assets/icons/pdf.png")}
                   style={{ height: 42, width: 42, marginBottom: 5 }}
-                />}
+                />
                 <Text
                   style={{
                     fontSize: 14,
@@ -296,6 +283,7 @@ const AssesmentForms = () => {
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
+                  justifyContent: "space-between",
                   marginVertical: 10,
                   borderBottomColor: colors.borderClr,
                   borderBottomWidth: 1,
@@ -303,40 +291,35 @@ const AssesmentForms = () => {
                 }}
                 key={index}
               >
-                {item?.documentName?.includes('pdf')?                
-                    <Image
-                        source={require('../../../assets/icons/pdf.png')}
-                        style={{ height: 42, width: 42, marginBottom: 5 }}
-                      />
-                      : item.document_url.includes('docx')?
-                      <Image
-                      source={require('../../../assets/icons/word.png')}
-                      style={{ height: 42, width: 42, marginBottom: 5 }}
-                    />
-                    : item.document_url.includes('pptx')?
-                    <Image
-                    source={require('../../../assets/icons/powerpoint.png')}
-                    style={{ height: 42, width: 42, marginBottom: 5 }}
-                  />  
-                   :
-                   <Image
-                   source={require('../../../assets/icons/excel.png')}
-                  style={{ height: 42, width: 42, marginBottom: 5 }}
-                />}
-              <Text
+                <View
                   style={{
-                    fontSize: 14,
-                    // fontFamily: "FiraSans_400Regular",
-                    color: colors.textClr,
-                    maxWidth: "80%",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "90%",
                   }}
                 >
-                  Name: {item?.documentName} {"\n"}{"\n"}
-                  Date: {item?.updatedAt?.split('T')[0]}
-
-                </Text>
-                {/* <Text style={styles.remainingText}>
-                </Text> */}
+                  <Image
+                    source={require("../../../assets/icons/pdf.png")}
+                    style={{ height: 42, width: 42, marginBottom: 5 }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      // fontFamily: "FiraSans_400Regular",
+                      color: colors.textClr,
+                      maxWidth: "80%",
+                    }}
+                  >
+                    {item?.documentName}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() =>
+                    downloadFile(item.document_url, item.documentName)
+                  }
+                >
+                  <Feather name="download" size={24} color="black" />
+                </TouchableOpacity>
               </TouchableOpacity>
             ))}
           </View>
@@ -346,7 +329,7 @@ const AssesmentForms = () => {
   );
 };
 
-export default AssesmentForms;
+export default Documents;
 
 const styles = StyleSheet.create({
   btnContainer: {

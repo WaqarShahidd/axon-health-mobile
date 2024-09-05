@@ -19,22 +19,90 @@ import { useSelector } from "react-redux";
 const screenWidth = Dimensions.get("window").width;
 
 const Insights = () => {
-  const data = [
-    {
-      name: "Completed",
-      population: 5,
-      color: "#F1F2F4",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-    {
-      name: "Uncomplete",
-      population: 10,
-      color: "#138418",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15,
-    },
-  ];
+  const [formData, setformData] = useState([]);
+  const [dailyActivityData, setdailyActivityData] = useState([]);
+  const [dailyCheckInQues, setdailyCheckInQues] = useState([]);
+
+  const GetFormCount = async () => {
+    await axios
+      .get(`${BASE_URL}/patient_form/getCountForFormsAssigned`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const formCount = res.data;
+        setformData([
+          {
+            name: `${formCount?.completedForms} Completed`,
+            population: formCount?.completedForms,
+            color: "#138418",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+          {
+            name: `${formCount?.pendingForms} Uncomplete`,
+            population: formCount?.pendingForms,
+            color: "#F1F2F4",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+        ]);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const GetActivityCount = async () => {
+    await axios
+      .get(`${BASE_URL}/patient_activity/getCountForActivitiesAssigned`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+        const activityCount = res.data;
+        setdailyActivityData([
+          {
+            name: `${activityCount?.completedDailyActivity} Completed`,
+            population: activityCount?.completedDailyActivity || 0,
+            color: "#138418",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+          {
+            name: `${activityCount?.pendingDailyActivity} Uncomplete`,
+            population: activityCount?.pendingDailyActivity || 0,
+            color: "#F1F2F4",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+        ]);
+        setdailyCheckInQues([
+          {
+            name: `${activityCount?.completedDailyCheckInActivity} Completed`,
+            population: activityCount?.completedDailyCheckInActivity || 0,
+            color: "#138418",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+          {
+            name: `${activityCount?.pendingDailyCheckInActivity} Uncomplete`,
+            population: activityCount?.pendingDailyCheckInActivity || 0,
+            color: "#F1F2F4",
+            legendFontColor: "#7F7F7F",
+            legendFontSize: 15,
+          },
+        ]);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    GetFormCount();
+    GetActivityCount();
+  }, []);
 
   const chartConfig = {
     backgroundColor: "#e26a00",
@@ -59,7 +127,7 @@ const Insights = () => {
         <View style={styles.chartContainer}>
           <Text style={styles.chartHeader}>Daily Check-Ins Questions: </Text>
           <PieChart
-            data={data}
+            data={dailyCheckInQues}
             width={screenWidth * 1.5}
             height={220}
             chartConfig={chartConfig}
@@ -69,20 +137,17 @@ const Insights = () => {
             hasLegend={false}
           />
           <View style={styles.legendContainer}>
-            {data.map((item, index) => (
+            {dailyCheckInQues?.map((item, index) => (
               <View key={index} style={styles.legendItem}>
                 <View
                   style={[
                     styles.legend,
                     {
-                      backgroundColor:
-                        item.name === "Completed" ? "#138418" : "#F1F2F4",
+                      backgroundColor: item.color,
                     },
                   ]}
                 />
-                <Text onPress={() => console.log(item?.color)}>
-                  {item.name}
-                </Text>
+                <Text>{item.name}</Text>
               </View>
             ))}
           </View>
@@ -90,7 +155,7 @@ const Insights = () => {
         <View style={styles.chartContainer}>
           <Text style={styles.chartHeader}>Daily Activities: </Text>
           <PieChart
-            data={data}
+            data={dailyActivityData}
             width={screenWidth * 1.5}
             height={220}
             chartConfig={chartConfig}
@@ -100,7 +165,7 @@ const Insights = () => {
             hasLegend={false}
           />
           <View style={styles.legendContainer}>
-            {data.map((item, index) => (
+            {dailyActivityData?.map((item, index) => (
               <View key={index} style={styles.legendItem}>
                 <View
                   style={[
@@ -118,7 +183,7 @@ const Insights = () => {
         <View style={styles.chartContainer}>
           <Text style={styles.chartHeader}>Daily Assessment Forms: </Text>
           <PieChart
-            data={data}
+            data={formData}
             width={screenWidth * 1.5}
             height={220}
             chartConfig={chartConfig}
@@ -128,7 +193,7 @@ const Insights = () => {
             hasLegend={false}
           />
           <View style={styles.legendContainer}>
-            {data.map((item, index) => (
+            {formData?.map((item, index) => (
               <View key={index} style={styles.legendItem}>
                 <View
                   style={[

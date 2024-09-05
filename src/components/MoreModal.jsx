@@ -170,8 +170,6 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                     navigation.navigate("Help");
                   } else if (item.title === "Activities") {
                     navigation.navigate("Activities");
-                  } else if (item.title === "Assessment Forms") {
-                    navigation.navigate("AssesmentForms");
                   } else if (item.title === "Daily Check-Ins") {
                     navigation.navigate("CheckIn");
                   } else if (item.title === "Questions") {

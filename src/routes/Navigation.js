@@ -10,7 +10,6 @@ import Settings from "../Screens/Settings/Settings";
 import Help from "../Screens/Help/Help";
 import Activities from "../Screens/Activities/Activities";
 import FormView from "../Screens/Activities/FormView";
-import AssesmentForms from "../Screens/Assesment Forms/AssesmentForms";
 import CheckIn from "../Screens/Daily Check-In/CheckIn";
 import Auth from "../Screens/Auth/Auth";
 import { useSelector } from "react-redux";
@@ -49,7 +48,6 @@ const Navigation = () => {
           <Stack.Screen name="Activities" component={Activities} />
           <Stack.Screen name="Questions" component={Questions} />
           <Stack.Screen name="FormView" component={FormView} />
-          <Stack.Screen name="AssesmentForms" component={AssesmentForms} />
           <Stack.Screen name="GoalDetails" component={GoalDetails} />
           <Stack.Screen name="CheckIn" component={CheckIn} />
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
