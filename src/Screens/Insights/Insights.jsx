@@ -29,7 +29,6 @@ const Insights = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
         const formCount = res.data;
         setformData([
           {
@@ -59,7 +58,6 @@ const Insights = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res.data);
         const activityCount = res.data;
         setdailyActivityData([
           {
@@ -212,6 +210,7 @@ const Insights = () => {
     );
   };
   const [doctor, setdoctor] = useState({});
+  const [siteDetails, setSiteDetails] = useState({});
   const { userData } = useSelector((state) => state.user);
   const [loading, setloading] = useState(false);
 
@@ -227,12 +226,30 @@ const Insights = () => {
       .then((res) => {
         setloading(false);
         setdoctor(res.data?.allPatientsDoctors?.assignedDoctor);
+        GetSiteDetails(res.data?.allPatientsDoctors?.siteId);
       })
       .catch((e) => {
         setloading(false);
       });
   };
+  const GetSiteDetails = async (siteId) => {
 
+    setloading(true);
+    await axios
+      .get(
+        `${BASE_URL}/site/getSiteDetails?siteId=${siteId}`,
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        setloading(false);
+        setSiteDetails(res.data?.oneSite[0]);
+      })
+      .catch((e) => {
+        setloading(false);
+      });
+  };
   useEffect(() => {
     GetDoctor();
   }, []);
@@ -309,6 +326,67 @@ const Insights = () => {
                   </Text>
                   <Text style={styles.remainingText}>
                     {doctor?.mobile}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.box}>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: "500",
+                  lineHeight: 24,
+                  color: colors.textClr,
+                  // fontFamily: "FiraSans_700Bold",
+                  textTransform: "uppercase",
+                }}
+              >
+                Site Details
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginTop: 10,
+                }}
+              >
+                <Image
+                  source={doctor?.avatar != '' ? {uri:doctor?.avatar} : require("../../../assets/images/user.png")}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 360,
+                    marginRight: 10,
+                  }}
+                />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    paddingVertical: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "500",
+                      lineHeight: 24,
+                      color: colors.textClr,
+                      // fontFamily: "FiraSans_700Bold",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {siteDetails?.site_name}
+                  </Text>
+                  <Text style={styles.remainingText}>
+                    {siteDetails?.email}
+                  </Text>
+                  <Text style={styles.remainingText}>
+                    {siteDetails?.mobile}
+                  </Text>
+                  <Text style={styles.remainingText}>
+                    {siteDetails?.address}
                   </Text>
                 </View>
               </View>

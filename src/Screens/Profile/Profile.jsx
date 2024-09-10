@@ -251,6 +251,7 @@ const Profile = () => {
             Icon={MaterialIcons}
             iconName="person-outline"
           /> */}
+
           <CustomInput
             placeholder="Email"
             value={email}
@@ -306,7 +307,7 @@ const Profile = () => {
       </ScrollView>
   
       <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
-        <CustomBtn text="Update Password" onPress={UpdateUser} />
+        <CustomBtn text="Update" onPress={UpdateUser} />
       </View>
     </KeyboardAvoidingView>
   );
@@ -341,5 +342,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     // fontFamily: "FiraSans_700Bold",
   },
-
+  btnContainer: {
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: colors.borderClr,
+    borderRadius: 12,
+    padding: 2,
+  },
 });

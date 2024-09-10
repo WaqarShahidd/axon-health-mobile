@@ -73,7 +73,7 @@ const Header = ({ title }) => {
           Hi, {userData?.name}
         </Text> */}
 
-      {title=="Today's Activities" && ( <Text
+      {title=="Activities" && ( <Text
           style={{
             fontSize: 24,
             fontWeight: "bold",

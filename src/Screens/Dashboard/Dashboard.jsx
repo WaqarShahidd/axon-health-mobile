@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 const Dashboard = () => {
   const [selectedButton, setSelectedButton] = useState("active");
@@ -84,6 +85,8 @@ const Dashboard = () => {
 
   const [doctor, setdoctor] = useState({});
   const [todaysActivities, setTodaysActivities] = useState([]);
+  const [futureActivities, setFutureActivities] = useState([]);
+  const [pastActivities, setPastActivities] = useState([]);
   const [allActivities, setAllActivities] = useState([]);
   const [completedActivities, setAllCompletedActivities] = useState([]);
 
@@ -118,42 +121,40 @@ const Dashboard = () => {
         setloading(false);
         const allActivity = res.data.allFormsAndActivities;
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+        let future = []
+        let past = []
+        let todays = []
 
-        const todaysEvents = allActivity.filter((event) => {
-          const eventDate = new Date(event.date);
-          return (
-            eventDate >= today &&
-            eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)
-          );
-        });
+        const today = new Date()
+        
+        allActivity?.map((i) => {
+          const eventDate = new Date(i.date);
+          const eD = moment(eventDate).format("YYYY-MM-DD")
+          const tD = moment(today).format("YYYY-MM-DD")
 
-        for (let i = allActivity.length - 1; i >= 0; i--) {
-          const eventDate = new Date(allActivity[i].date);
-          if (
-            eventDate >= today &&
-            eventDate < new Date(today.getTime() + 24 * 60 * 60 * 1000)
-          ) {
-            allActivity.splice(i, 1);
+          if(moment(eD).isAfter(tD)){
+            return future.push(i)
+          } else if(moment(eD).isBefore(tD)){
+            return past.push(i)
+          } else if(moment(eD).isSame(tD)){
+            return todays.push(i)
           }
-          if(eventDate<today || allActivity[i].patientActivityStatus==='completed')
-          {
-            await setAllCompletedActivities([...completedActivities,allActivity[i]]);
-            allActivity.splice(i, 1);
+        })
+        // console.log(past?.map((i) => i?.date), "past")
+        // console.log(todayS?.map((i) => i?.date), "today")
+        // console.log(future?.map((i) => i?.date), "future")
+        setTodaysActivities(todays);
+        setFutureActivities(future);
+        setPastActivities(past);
 
-          }
-          
-        }
-
-        if (todaysEvents.length == 0) {
-          setIsTodayCollapsed(true);
-        }
-        if (allActivity.length == 0) {
-          setIsWeekCollapsed(true);
-        }
-        setAllActivities(allActivity);
-        setTodaysActivities(todaysEvents);
+        // if (todaysEvents.length == 0) {
+        //   setIsTodayCollapsed(true);
+        // }
+        // if (allActivity.length == 0) {
+        //   setIsWeekCollapsed(true);
+        // }
+        // setAllActivities(allActivity);
+        // setTodaysActivities(todaysEvents);
       })
       .catch((e) => {
         setloading(false);
@@ -172,11 +173,11 @@ const Dashboard = () => {
       .then(async (res) => {
         setloading(false);
         const allActivities = res.data.allFormsAndActivities;
-        console.log('allActivities',allActivities);
+        // console.log('allActivities',allActivities);
         if(allActivities.length>=0)
         {
           for (let i = 0; i <= allActivities.length; i++) {
-            console.log('allActivities',allActivities[i]);
+            // console.log('allActivities',allActivities[i]);
 //          setAllCompletedActivities([...completedActivities,allActivities[i]]);
           }
         }
@@ -186,12 +187,12 @@ const Dashboard = () => {
         setloading(false);
       });
   };
-  console.log('completedActivities',completedActivities);
+  // console.log('completedActivities',completedActivities);
   useEffect(() => {
     GetDailyGoals();
     GetDoctor();
     GetAllPatientActivities();
-    getAllCompletedAssignments();
+   // getAllCompletedAssignments();
   }, []);
 
   const navigation = useNavigation();
@@ -211,10 +212,10 @@ const Dashboard = () => {
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {selectedButton === "active" ? (
-          <Header title="Today's Activities" />
+          <Header title="Activities" />
         ) : selectedButton === "past" ? (
-          <Header title="Past Activities" />
-        ):<Header title="Future Activities"></Header>}
+          <Header title="Activities" />
+        ):<Header title="Activities"></Header>}
         <View
           style={{
             marginHorizontal: 20,
@@ -279,7 +280,7 @@ const Dashboard = () => {
                           })
                         }
                         style={[styles.greyBox, {
-                          backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                          backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
                         }]}                        
                         key={index}
                       >
@@ -330,17 +331,17 @@ const Dashboard = () => {
               </View>
               {!isWeekCollapsed && (
                 <View>
-                  {allActivities?.map((goal, index) => (
+                  {futureActivities?.map((goal, index) => (
                     <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("GoalDetails", {
-                          id: goal?.id,
-                          type: goal?.type,
-                          patientActivityId: goal?.patientActivityId,
-                        })
-                      }
+                      // onPress={() =>
+                      //   navigation.navigate("GoalDetails", {
+                      //     id: goal?.id,
+                      //     type: goal?.type,
+                      //     patientActivityId: goal?.patientActivityId,
+                      //   })
+                      // }
                       style={[styles.greyBox, {
-                        backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                        backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
                       }]}                      
                       key={index}
                     >
@@ -366,20 +367,20 @@ const Dashboard = () => {
               <View style={styles.header}>
                       <Text style={styles?.headerText}>Past Activities</Text>
                 </View>              
-              {completedActivities.map((goal, index) => {
+              {pastActivities.map((goal, index) => {
                 return (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("GoalDetails", {
-                      id: goal?.id,
-                      type: goal?.type,
-                      completed: true,
-                      patientActivityId: goal?.patientActivityId,
-                    })
-//                    getAllCompletedAssignments()
-                  }
+//                   onPress={() =>
+//                     navigation.navigate("GoalDetails", {
+//                       id: goal?.id,
+//                       type: goal?.type,
+//                       completed: true,
+//                       patientActivityId: goal?.patientActivityId,
+//                     })
+// //                    getAllCompletedAssignments()
+//                   }
                   style={[styles.greyBox, {
-                    backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#fff"
+                    backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
                   }]}
                   
                   key={index}

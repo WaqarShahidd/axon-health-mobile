@@ -310,7 +310,8 @@ const Documents = () => {
                       maxWidth: "80%",
                     }}
                   >
-                    {item?.documentName}
+                    {item?.documentName} {"\n"}
+                    {item?.updatedAt.split('T')[0]}
                   </Text>
                 </View>
                 <TouchableOpacity
