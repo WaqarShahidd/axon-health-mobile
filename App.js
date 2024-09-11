@@ -29,8 +29,3 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-// "extra": {
-//   "eas": {
-//     "projectId": "70cffc10-8049-40ae-b916-dc24f78a6b43"
-//   }
-// }
