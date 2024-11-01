@@ -68,14 +68,14 @@ const Auth = () => {
               setloading(false);
               seterror(true);
               seterrorMsg(e.response?.data?.message);
-              console.log(e);
+              console.log(e.response?.data?.message);
             });
         })
         .catch((e) => {
           setloading(false);
           seterror(true);
           seterrorMsg(e.response?.data?.message);
-          console.log(e);
+          console.log(e.response?.data?.message);
         });
     }
   };
@@ -118,7 +118,7 @@ const Auth = () => {
                     color: "red",
                   }}
                 >
-                  {errorMsg}
+                  {errorMsg || "An error occured"}
                 </Text>
               )}
               <CustomInput

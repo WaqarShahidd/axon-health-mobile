@@ -2,25 +2,33 @@
   "expo": {
     "name": "axon-health-mobile",
     "slug": "axon-health-mobile",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.axonhealth.axon",
+      "buildNumber": "1.0.2",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nucleussolutions.axonhealth"
+      "package": "com.axonhealth.axon",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,7 +36,7 @@
     "plugins": [],
     "extra": {
       "eas": {
-        "projectId": "70cffc10-8049-40ae-b916-dc24f78a6b43"
+        "projectId": "582f8eab-8756-45e8-b53c-68030dcefd2b"
       }
     }
   }
