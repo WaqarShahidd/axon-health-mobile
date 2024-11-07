@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import Questions from "../Screens/Questions/Questions";
 import Profile from "../Screens/Profile/Profile";
 import PDFViewer from "../components/PDFViewer";
+import ForgotPassword from "../Screens/Auth/ForgotPassword";
 
 const Stack = createStackNavigator();
 
@@ -33,6 +34,7 @@ const ModalScreen = ({}) => {
 
 const Navigation = () => {
   const { userData } = useSelector((state) => state.user);
+  console.log(userData, "user data");
   return (
     <Stack.Navigator
       screenOptions={{
@@ -65,7 +67,10 @@ const Navigation = () => {
           <Stack.Screen name="PDFViewer" component={PDFViewer} />
         </Stack.Group>
       ) : (
-        <Stack.Screen name="Login" component={Auth} />
+        <Stack.Group>
+          <Stack.Screen name="Login" component={Auth} />
+          <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+        </Stack.Group>
       )}
     </Stack.Navigator>
   );

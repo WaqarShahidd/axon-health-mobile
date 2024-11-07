@@ -32,6 +32,7 @@ const FormOptions = ({ question, setAnswers, index, patientFormId }) => {
           options={question?.answers}
           selectedOption={selectedOption}
           onSelect={(option) => {
+            console.log(option, "option");
             setSelectedOption(option);
             setAnswers((prev) => [
               ...prev,
@@ -98,15 +99,20 @@ const GoalDetails = ({ route }) => {
       )
       .then(async (res) => {
         setloading(false);
+        console.log(res.data.allForm[0], "form detail");
         setActivityDetail(res?.data?.allForm[0]);
       })
       .catch((e) => {
-        console.log(e);
+        console.log(e?.response?.data?.message);
         setloading(false);
       });
   };
 
   const PostAnswer = async () => {
+    if (answers.length === 0) {
+      return alert("Please select a option to submit");
+    }
+    console.log(answers, "answers");
     setloading(true);
     await axios
       .post(
@@ -233,6 +239,7 @@ const GoalDetails = ({ route }) => {
           ) : (
             <CustomBtn
               text="Mark Goal Completed"
+              disabled={answers.length === 0 || route?.params?.disabled}
               onPress={() => {
                 if (answers.length > 0) {
                   PostAnswer();

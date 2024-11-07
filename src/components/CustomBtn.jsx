@@ -3,9 +3,18 @@ import React from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { colors } from "../theme/theme";
 
-const CustomBtn = ({ text, onPress }) => {
+const CustomBtn = ({ text, onPress, disabled = false }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      disabled={disabled}
+      style={[
+        styles.button,
+        {
+          backgroundColor: disabled ? "#89C18B" : colors.primary,
+        },
+      ]}
+      onPress={onPress}
+    >
       <Text style={styles.buttonText}>{text}</Text>
       <FontAwesome6 name="arrow-right-long" size={24} color="white" />
     </TouchableOpacity>
@@ -19,7 +28,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.primary,
     padding: 20,
     borderRadius: 12,
     marginTop: 20,

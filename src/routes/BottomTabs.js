@@ -7,6 +7,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../theme/theme";
 import MoreModal from "../components/MoreModal";
 import Documents from "../Screens/Documents/Documents";
+import MyDoctor from "../Screens/MyDr/MyDoctor";
 
 const Tab = createBottomTabNavigator();
 
@@ -146,7 +147,7 @@ const BottomTabs = () => {
 
       <Tab.Screen
         name="Insights"
-        component={Insights}
+        component={MyDoctor}
         options={{
           tabBarIcon: ({ focused }) => (
             <View

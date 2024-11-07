@@ -75,7 +75,7 @@ const PrivacyPolicy = () => {
         </Text>
       </ScrollView>
 
-      <LinearGradient
+      {/* <LinearGradient
         style={{
           height: "20%",
           width: "100%",
@@ -87,8 +87,8 @@ const PrivacyPolicy = () => {
         }}
         colors={["rgba(255,255,255,0)", "rgba(255,255,255,0.8)"]}
         locations={[0, 0.3]}
-      />
-      <View
+      /> */}
+      {/* <View
         style={{
           position: "absolute",
           bottom: 0,
@@ -98,7 +98,7 @@ const PrivacyPolicy = () => {
         }}
       >
         <CustomBtn text="I agree" />
-      </View>
+      </View> */}
     </View>
   );
 };

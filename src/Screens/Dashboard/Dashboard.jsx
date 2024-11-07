@@ -6,17 +6,19 @@ import {
   TouchableOpacity,
   View,
   LayoutAnimation,
+  ActivityIndicator,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { colors } from "../../theme/theme";
 import { Entypo } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import Spinner from "react-native-loading-spinner-overlay";
 
 const Dashboard = () => {
   const [selectedButton, setSelectedButton] = useState("active");
@@ -46,67 +48,11 @@ const Dashboard = () => {
 
   const { userData } = useSelector((state) => state.user);
 
-  const [confirmation, setconfirmation] = useState(false);
   const [loading, setloading] = useState(false);
 
-  const CheckIn = async (e) => {
-    setloading(true);
-    await axios
-      .post(`${BASE_URL}/patient_checkin/createPatientCheckIn`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setloading(false);
-        setconfirmation(true);
-      })
-      .catch((e) => {
-        setloading(false);
-        setconfirmation(false);
-      });
-  };
-
-  const GetDailyGoals = async (e) => {
-    setloading(true);
-    await axios
-      .get(
-        `${BASE_URL}/patient_goal/getAllPatientGoal?patientId=${userData?.id}`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        setloading(false);
-        setdailyGoals(res.data?.allPatientGoals);
-      })
-      .catch((e) => {
-        setloading(false);
-      });
-  };
-
-  const [doctor, setdoctor] = useState({});
   const [todaysActivities, setTodaysActivities] = useState([]);
   const [futureActivities, setFutureActivities] = useState([]);
   const [pastActivities, setPastActivities] = useState([]);
-  const [allActivities, setAllActivities] = useState([]);
-  const [completedActivities, setAllCompletedActivities] = useState([]);
-
-  const GetDoctor = async (e) => {
-    setloading(true);
-    await axios
-      .get(
-        `${BASE_URL}/doctor_patient/getAssignedDoctorWithPatientId?patientId=${userData?.id}`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        setloading(false);
-        setdoctor(res.data?.allPatientsDoctors?.assignedDoctor);
-      })
-      .catch((e) => {
-        setloading(false);
-      });
-  };
 
   const GetAllPatientActivities = async (e) => {
     setloading(true);
@@ -120,41 +66,31 @@ const Dashboard = () => {
       .then(async (res) => {
         setloading(false);
         const allActivity = res.data.allFormsAndActivities;
+        console.log(allActivity, "allActivity");
 
-        let future = []
-        let past = []
-        let todays = []
+        let future = [];
+        let past = [];
+        let todays = [];
 
-        const today = new Date()
-        
+        const today = new Date();
+
         allActivity?.map((i) => {
           const eventDate = new Date(i.date);
-          const eD = moment(eventDate).format("YYYY-MM-DD")
-          const tD = moment(today).format("YYYY-MM-DD")
+          const eD = moment(eventDate).format("YYYY-MM-DD");
+          const tD = moment(today).format("YYYY-MM-DD");
 
-          if(moment(eD).isAfter(tD)){
-            return future.push(i)
-          } else if(moment(eD).isBefore(tD)){
-            return past.push(i)
-          } else if(moment(eD).isSame(tD)){
-            return todays.push(i)
+          if (moment(eD).isAfter(tD)) {
+            return future.push(i);
+          } else if (moment(eD).isBefore(tD)) {
+            return past.push(i);
+          } else if (moment(eD).isSame(tD)) {
+            return todays.push(i);
           }
-        })
-        // console.log(past?.map((i) => i?.date), "past")
-        // console.log(todayS?.map((i) => i?.date), "today")
-        // console.log(future?.map((i) => i?.date), "future")
+        });
+
         setTodaysActivities(todays);
         setFutureActivities(future);
         setPastActivities(past);
-
-        // if (todaysEvents.length == 0) {
-        //   setIsTodayCollapsed(true);
-        // }
-        // if (allActivity.length == 0) {
-        //   setIsWeekCollapsed(true);
-        // }
-        // setAllActivities(allActivity);
-        // setTodaysActivities(todaysEvents);
       })
       .catch((e) => {
         setloading(false);
@@ -174,11 +110,10 @@ const Dashboard = () => {
         setloading(false);
         const allActivities = res.data.allFormsAndActivities;
         // console.log('allActivities',allActivities);
-        if(allActivities.length>=0)
-        {
+        if (allActivities.length >= 0) {
           for (let i = 0; i <= allActivities.length; i++) {
             // console.log('allActivities',allActivities[i]);
-//          setAllCompletedActivities([...completedActivities,allActivities[i]]);
+            //          setAllCompletedActivities([...completedActivities,allActivities[i]]);
           }
         }
         // setAllCompletedActivities(allActivities);
@@ -187,13 +122,12 @@ const Dashboard = () => {
         setloading(false);
       });
   };
-  // console.log('completedActivities',completedActivities);
-  useEffect(() => {
-    GetDailyGoals();
-    GetDoctor();
-    GetAllPatientActivities();
-   // getAllCompletedAssignments();
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      GetAllPatientActivities();
+    }, [])
+  );
 
   const navigation = useNavigation();
 
@@ -215,7 +149,9 @@ const Dashboard = () => {
           <Header title="Activities" />
         ) : selectedButton === "past" ? (
           <Header title="Activities" />
-        ):<Header title="Activities"></Header>}
+        ) : (
+          <Header title="Activities"></Header>
+        )}
         <View
           style={{
             marginHorizontal: 20,
@@ -247,6 +183,15 @@ const Dashboard = () => {
             ))}
           </View>
 
+          {loading && (
+            <ActivityIndicator
+              animating={loading}
+              size="large"
+              color={colors.primary}
+              style={{ zIndex: 999999, marginTop: 25 }}
+            />
+          )}
+
           {/* Accordions */}
           {selectedButton === "active" ? (
             <View>
@@ -277,23 +222,59 @@ const Dashboard = () => {
                             id: goal.id,
                             type: goal.type,
                             patientActivityId: goal?.patientActivityId,
+                            disabled: goal?.patientActivityStatus !== "pending",
                           })
                         }
-                        style={[styles.greyBox, {
-                          backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
-                        }]}                        
+                        style={[
+                          styles.greyBox,
+                          {
+                            backgroundColor:
+                              goal?.patientActivityStatus === "pending"
+                                ? "#ececec"
+                                : colors.primary,
+                          },
+                        ]}
                         key={index}
                       >
-                        {/* <View style={styles.box} key={index}> */}
-                        <Text style={styles.boxText}>{goal.name}</Text>
-                        <Text style={styles.remainingText}>
+                        <Text
+                          style={[
+                            styles.boxText,
+                            {
+                              color:
+                                goal?.patientActivityStatus === "pending"
+                                  ? "#000"
+                                  : "#fff",
+                            },
+                          ]}
+                        >
+                          {goal.name}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.remainingText,
+                            {
+                              color:
+                                goal?.patientActivityStatus === "pending"
+                                  ? "#000"
+                                  : "#fff",
+                            },
+                          ]}
+                        >
                           {"Assigned By: " + goal?.assignedBy?.name}
                         </Text>
-                        <Text style={styles.remainingText}>
-                    {"Date: " + goal?.date?.split('T')[0]}
-                  </Text>
-
-                        {/* </View> */}
+                        <Text
+                          style={[
+                            styles.remainingText,
+                            {
+                              color:
+                                goal?.patientActivityStatus === "pending"
+                                  ? "#000"
+                                  : "#fff",
+                            },
+                          ]}
+                        >
+                          {"Date: " + goal?.date?.split("T")[0]}
+                        </Text>
                       </TouchableOpacity>
                     ))}
                   </View>
@@ -302,13 +283,9 @@ const Dashboard = () => {
                     <Text>No Activities For today found.</Text>
                   </View>
                 )
-              ) : (
-                ""
-              )}
+              ) : null}
             </View>
-          ) : (
-            ""
-          )}
+          ) : null}
 
           {/* This Week Goals */}
           {selectedButton == "future" ? (
@@ -332,17 +309,16 @@ const Dashboard = () => {
               {!isWeekCollapsed && (
                 <View>
                   {futureActivities?.map((goal, index) => (
-                    <TouchableOpacity
-                      // onPress={() =>
-                      //   navigation.navigate("GoalDetails", {
-                      //     id: goal?.id,
-                      //     type: goal?.type,
-                      //     patientActivityId: goal?.patientActivityId,
-                      //   })
-                      // }
-                      style={[styles.greyBox, {
-                        backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
-                      }]}                      
+                    <View
+                      style={[
+                        styles.greyBox,
+                        {
+                          backgroundColor:
+                            goal?.patientActivityStatus === "pending"
+                              ? "#ececec"
+                              : "#138418",
+                        },
+                      ]}
                       key={index}
                     >
                       <Text style={styles?.boxText}>{goal?.name}</Text>
@@ -350,125 +326,78 @@ const Dashboard = () => {
                         {"Assigned By: " + goal?.assignedBy?.name}
                       </Text>
                       <Text style={styles.remainingText}>
-                    {"Date: " + goal?.date?.split('T')[0]}
-                  </Text>
-
-                    </TouchableOpacity>
+                        {"Date: " + goal?.date?.split("T")[0]}
+                      </Text>
+                    </View>
                   ))}
                 </View>
               )}
             </View>
-          ) : (
-            ""
-          )}
+          ) : null}
+
           {selectedButton === "past" ? (
             <View>
-
               <View style={styles.header}>
-                      <Text style={styles?.headerText}>Past Activities</Text>
-                </View>              
+                <Text style={styles?.headerText}>Past Activities</Text>
+              </View>
               {pastActivities.map((goal, index) => {
                 return (
-                <TouchableOpacity
-//                   onPress={() =>
-//                     navigation.navigate("GoalDetails", {
-//                       id: goal?.id,
-//                       type: goal?.type,
-//                       completed: true,
-//                       patientActivityId: goal?.patientActivityId,
-//                     })
-// //                    getAllCompletedAssignments()
-//                   }
-                  style={[styles.greyBox, {
-                    backgroundColor: goal?.patientActivityStatus === "pending" ? "#ececec" : "#138418"
-                  }]}
-                  
-                  key={index}
-                >
-                  <Text style={styles.boxText}>{goal?.name}</Text>
-                  <Text style={styles.remainingText}>
-                    {"Assigned By: " + goal?.assignedBy?.name}
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    {"Date: " + goal?.date?.split('T')[0]}
-                  </Text>
-                </TouchableOpacity>
-                )
-              
+                  <View
+                    style={[
+                      styles.greyBox,
+                      {
+                        backgroundColor:
+                          goal?.patientActivityStatus === "pending"
+                            ? "#ececec"
+                            : "#138418",
+                      },
+                    ]}
+                    key={index}
+                  >
+                    <Text
+                      style={[
+                        styles.boxText,
+                        {
+                          color:
+                            goal?.patientActivityStatus === "pending"
+                              ? "#000"
+                              : "#fff",
+                        },
+                      ]}
+                    >
+                      {goal?.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.remainingText,
+                        {
+                          color:
+                            goal?.patientActivityStatus === "pending"
+                              ? "#000"
+                              : "#fff",
+                        },
+                      ]}
+                    >
+                      {"Assigned By: " + goal?.assignedBy?.name}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.remainingText,
+                        {
+                          color:
+                            goal?.patientActivityStatus === "pending"
+                              ? "#000"
+                              : "#fff",
+                        },
+                      ]}
+                    >
+                      {"Date: " + goal?.date?.split("T")[0]}
+                    </Text>
+                  </View>
+                );
               })}
             </View>
-          ) : (
-            ""
-          )}
-          {/* Your Therapist */}
-          {/* <View style={{ justifyContent: "center" }}>
-            <View style={styles.box}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: "500",
-                  lineHeight: 24,
-                  color: colors.textClr,
-                  // fontFamily: "FiraSans_700Bold",
-                  textTransform: "uppercase",
-                }}
-              >
-                Your Therapist
-              </Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 10,
-                }}
-              >
-                <Image
-                  source={require("../../../assets/images/user.png")}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 360,
-                    marginRight: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    paddingVertical: 5,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      lineHeight: 24,
-                      color: colors.textClr,
-                      // fontFamily: "FiraSans_700Bold",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Your Therapist
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    Primary Care Physician
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <Image
-              source={require("../../../assets/icons/user-doctor.png")}
-              style={{
-                height: 135,
-                resizeMode: "contain",
-                justifyContent: "center",
-                position: "absolute",
-                right: 0,
-                zIndex: 0,
-                width: 135,
-              }}
-            />
-          </View> */}
+          ) : null}
         </View>
       </ScrollView>
     </View>

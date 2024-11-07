@@ -2,7 +2,7 @@
   "expo": {
     "name": "axon-health-mobile",
     "slug": "axon-health-mobile",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.axonhealth.axon",
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.3",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.axonhealth.axon",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"

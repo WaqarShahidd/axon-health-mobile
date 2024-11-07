@@ -223,24 +223,6 @@ export const CustomPasswordInput = ({
         <MaterialIcons name={"password"} size={20} color={colors.textClr} />
 
         <>
-          {/* {value !== "" && (
-            <Animated.Text
-              style={{
-                position: "absolute",
-                left: 40,
-                top: 10,
-                //   top: translateY,
-                backgroundColor: "transparent",
-                paddingHorizontal: 0,
-                zIndex: 1,
-                fontFamily: "FiraSans-Bold",
-                fontSize: 11,
-                textTransform: "uppercase",
-              }}
-            >
-              {placeholder}
-            </Animated.Text>
-          )} */}
           <TextInput
             placeholder={placeholder}
             placeholderTextColor={"#000"}

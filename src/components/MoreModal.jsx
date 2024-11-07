@@ -1,15 +1,15 @@
 import {
+  BackHandler,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { colors } from "../theme/theme";
 import Modal from "react-native-modal";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { clearUserData } from "../redux/dispatchers/user.dispatcher";
@@ -147,8 +147,48 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
           margin: 0,
         }}
       >
-        <View style={{ backgroundColor: "white", height: "30%" }}>
+        <View style={{ backgroundColor: "white", height: "40%" }}>
           <View style={{ marginVertical: 10 }}>
+            <View
+              style={{
+                marginHorizontal: 20,
+                marginVertical: 10,
+                borderBottomWidth: 1,
+                paddingBottom: 20,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                borderBottomColor: "#F7F8FA",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: colors.textClr,
+                  textAlign: "left",
+                  fontWeight: "bold",
+                }}
+              >
+                More Options
+              </Text>
+              <TouchableOpacity
+                style={{
+                  width: 30,
+                  height: 30,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 15,
+                  backgroundColor: "#F7F8FA",
+                }}
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color="black"
+                  onPress={() => setModalVisible(false)}
+                />
+              </TouchableOpacity>
+            </View>
             {moreOptions.map((item, index) => (
               <TouchableOpacity
                 style={{
@@ -165,7 +205,7 @@ const MoreModal = ({ modalVisible, setModalVisible }) => {
                     navigation.navigate("PrivacyPolicy");
                   } //else if (item.title === "Settings") {
                   //   navigation.navigate("Settings");
-                  // } 
+                  // }
                   else if (item.title === "Help") {
                     navigation.navigate("Help");
                   } else if (item.title === "Activities") {

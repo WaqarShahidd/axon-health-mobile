@@ -5,9 +5,9 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
 } from "react-native";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, gradient } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
@@ -96,11 +96,6 @@ const Insights = () => {
         console.log(e);
       });
   };
-
-  useEffect(() => {
-    GetFormCount();
-    GetActivityCount();
-  }, []);
 
   const chartConfig = {
     backgroundColor: "#e26a00",
@@ -209,6 +204,7 @@ const Insights = () => {
       </>
     );
   };
+
   const [doctor, setdoctor] = useState({});
   const [siteDetails, setSiteDetails] = useState({});
   const { userData } = useSelector((state) => state.user);
@@ -232,16 +228,13 @@ const Insights = () => {
         setloading(false);
       });
   };
-  const GetSiteDetails = async (siteId) => {
 
+  const GetSiteDetails = async (siteId) => {
     setloading(true);
     await axios
-      .get(
-        `${BASE_URL}/site/getSiteDetails?siteId=${siteId}`,
-        {
-          withCredentials: true,
-        }
-      )
+      .get(`${BASE_URL}/site/getSiteDetails?siteId=${siteId}`, {
+        withCredentials: true,
+      })
       .then((res) => {
         setloading(false);
         setSiteDetails(res.data?.oneSite[0]);
@@ -250,6 +243,7 @@ const Insights = () => {
         setloading(false);
       });
   };
+
   useEffect(() => {
     GetDoctor();
   }, []);
@@ -269,141 +263,139 @@ const Insights = () => {
 
       <ScrollView>
         <Header title="My Therapist" />
-          <View style={{ justifyContent: "center" }}>
-            <View style={styles.box}>
-              <Text
+        <View style={{ justifyContent: "center" }}>
+          <View style={styles.box}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "500",
+                lineHeight: 24,
+                color: colors.textClr,
+                // fontFamily: "FiraSans_700Bold",
+                textTransform: "uppercase",
+              }}
+            >
+              Your Therapist
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <Image
+                source={
+                  doctor?.avatar != ""
+                    ? { uri: doctor?.avatar }
+                    : require("../../../assets/images/user.png")
+                }
                 style={{
-                  fontSize: 14,
-                  fontWeight: "500",
-                  lineHeight: 24,
-                  color: colors.textClr,
-                  // fontFamily: "FiraSans_700Bold",
-                  textTransform: "uppercase",
+                  width: 50,
+                  height: 50,
+                  borderRadius: 360,
+                  marginRight: 10,
                 }}
-              >
-                Your Therapist
-              </Text>
+              />
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 10,
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  paddingVertical: 5,
                 }}
               >
-                <Image
-                  source={doctor?.avatar != '' ? {uri:doctor?.avatar} : require("../../../assets/images/user.png")}
+                <Text
                   style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 360,
-                    marginRight: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    paddingVertical: 5,
+                    fontSize: 14,
+                    fontWeight: "500",
+                    lineHeight: 24,
+                    color: colors.textClr,
+                    // fontFamily: "FiraSans_700Bold",
+                    textTransform: "uppercase",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      lineHeight: 24,
-                      color: colors.textClr,
-                      // fontFamily: "FiraSans_700Bold",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    DR. {doctor?.name}
-                  </Text>
-                  {/* <Text style={styles.remainingText}>
+                  DR. {doctor?.name}
+                </Text>
+                {/* <Text style={styles.remainingText}>
                     {doctor?.doctorType}
                   </Text> */}
-                  <Text style={styles.remainingText}>
-                    {doctor?.email}
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    {doctor?.mobile}
-                  </Text>
-                </View>
+                <Text style={styles.remainingText}>{doctor?.email}</Text>
+                <Text style={styles.remainingText}>{doctor?.mobile}</Text>
               </View>
             </View>
+          </View>
 
-            <View style={styles.box}>
-              <Text
+          <View style={styles.box}>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "500",
+                lineHeight: 24,
+                color: colors.textClr,
+                // fontFamily: "FiraSans_700Bold",
+                textTransform: "uppercase",
+              }}
+            >
+              Site Details
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 10,
+              }}
+            >
+              <Image
+                source={
+                  doctor?.avatar != ""
+                    ? { uri: doctor?.avatar }
+                    : require("../../../assets/images/user.png")
+                }
                 style={{
-                  fontSize: 14,
-                  fontWeight: "500",
-                  lineHeight: 24,
-                  color: colors.textClr,
-                  // fontFamily: "FiraSans_700Bold",
-                  textTransform: "uppercase",
+                  width: 50,
+                  height: 50,
+                  borderRadius: 360,
+                  marginRight: 10,
                 }}
-              >
-                Site Details
-              </Text>
+              />
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginTop: 10,
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  paddingVertical: 5,
                 }}
               >
-                <Image
-                  source={doctor?.avatar != '' ? {uri:doctor?.avatar} : require("../../../assets/images/user.png")}
+                <Text
                   style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 360,
-                    marginRight: 10,
-                  }}
-                />
-                <View
-                  style={{
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    paddingVertical: 5,
+                    fontSize: 14,
+                    fontWeight: "500",
+                    lineHeight: 24,
+                    color: colors.textClr,
+                    // fontFamily: "FiraSans_700Bold",
+                    textTransform: "uppercase",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      lineHeight: 24,
-                      color: colors.textClr,
-                      // fontFamily: "FiraSans_700Bold",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {siteDetails?.site_name}
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    {siteDetails?.email}
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    {siteDetails?.mobile}
-                  </Text>
-                  <Text style={styles.remainingText}>
-                    {siteDetails?.address}
-                  </Text>
-                </View>
+                  {siteDetails?.site_name}
+                </Text>
+                <Text style={styles.remainingText}>{siteDetails?.email}</Text>
+                <Text style={styles.remainingText}>{siteDetails?.mobile}</Text>
+                <Text style={styles.remainingText}>{siteDetails?.address}</Text>
               </View>
             </View>
-            <Image
-              source={require("../../../assets/icons/user-doctor.png")}
-              style={{
-                height: 135,
-                resizeMode: "contain",
-                justifyContent: "center",
-                position: "absolute",
-                right: 0,
-                zIndex: 0,
-                width: 135,
-              }}
-            />
           </View>
+          <Image
+            source={require("../../../assets/icons/user-doctor.png")}
+            style={{
+              height: 135,
+              resizeMode: "contain",
+              justifyContent: "center",
+              position: "absolute",
+              right: 0,
+              zIndex: 0,
+              width: 135,
+            }}
+          />
+        </View>
         {/* {renderItem()} */}
       </ScrollView>
     </View>
@@ -451,7 +443,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   box: {
-    backgroundColor:"#fff",
+    backgroundColor: "#fff",
     borderRadius: 30,
     padding: 18,
     marginTop: 20,
@@ -464,5 +456,4 @@ const styles = StyleSheet.create({
     maxWidth: "80%",
     // fontFamily: "FiraSans_400Regular",
   },
-
 });

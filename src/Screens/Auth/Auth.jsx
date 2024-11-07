@@ -12,11 +12,7 @@ import {
   Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-  AntDesign,
-  EvilIcons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -59,6 +55,7 @@ const Auth = () => {
           }
         )
         .then((res) => {
+          console.log(res.data, "login response");
           dispatch(getUserById(res?.data?.user?.id))
             .then((res) => {
               setloading(false);
@@ -135,6 +132,13 @@ const Auth = () => {
                 value={password}
                 setValue={setpassword}
               />
+
+              <Text
+                style={styles.forgot}
+                onPress={() => nav.navigate("ForgotPassword")}
+              >
+                Forgot your password?{" "}
+              </Text>
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -190,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: size.h4 / fontScale,
     color: colors.secondary,
     textDecorationLine: "underline",
-    paddingTop: 10,
+    marginTop: 20,
     letterSpacing: -0.2,
   },
   bottomContainer: {

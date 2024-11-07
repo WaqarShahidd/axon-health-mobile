@@ -35,22 +35,19 @@ const Profile = () => {
   const navigation = useNavigation();
   const { userData } = useSelector((state) => state.user);
 
-  console.log(userData, "user");
   const [avatar, setavatar] = useState(userData?.avatar);
-  const [fullName, setfullName] = useState(userData?.name);
   const [email, setemail] = useState(userData?.email);
-  const [gender, setgender] = useState(userData?.gender);
   const [mobile, setmobile] = useState(userData?.mobile);
 
-
-  const [oldPassword, setoldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setconfirmPassword] = useState('');
+  const [oldPassword, setoldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
 
   const [loading, setloading] = useState(false);
   const [confirmation, setconfirmation] = useState(false);
+  const [passwordConfirmation, setPasswordConfirmation] = useState(false);
   const [errorConfirmation, seterrorConfirmation] = useState(false);
-  const [errorMsg, seterrorMsg] = useState('');
+  const [errorMsg, seterrorMsg] = useState("");
 
   const dispatch = useDispatch();
 
@@ -102,8 +99,8 @@ const Profile = () => {
 
   const UpdateUser = async () => {
     setloading(true);
-    if(userData?.email != email || userData.mobile != mobile)
-    {
+    seterrorConfirmation(false);
+    if (userData?.email !== email || userData.mobile !== mobile) {
       await axios
         .post(
           `${BASE_URL}/user/updateUser`,
@@ -119,53 +116,62 @@ const Profile = () => {
           }
         )
         .then((res) => {
+          console.log(res.data, "update user");
           setloading(false);
           dispatch(getUserById(userData?.id));
           setconfirmation(true);
+          seterrorConfirmation(false);
         })
         .catch((e) => {
           setloading(false);
           setconfirmation(false);
+          seterrorConfirmation(true);
         });
     }
-    if(newPassword != '')
-    {
-      if(newPassword === confirmPassword)
-      {
+    if (newPassword != "") {
+      if (newPassword === confirmPassword) {
+        console.log("password update", userData?.id, oldPassword, newPassword);
         await axios
-        .post(
-          `${BASE_URL}/user/updatePassword`,
-          {
-            userId: userData?.id,
-            oldPassword: oldPassword,
-            newPassword: newPassword,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          setloading(false);
-          dispatch(getUserById(userData?.id));
-          setconfirmation(true);
-        })
-        .catch((e) => {
-          setloading(false);
-          seterrorConfirmation(true);
-          seterrorMsg('Something went wrong.')
-        });
-      }
-      else{
+          .post(
+            `${BASE_URL}/user/updatePassword`,
+            {
+              userId: userData?.id,
+              oldPassword: oldPassword,
+              newPassword: newPassword,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            console.log(res.data, "password update");
+            setloading(false);
+            dispatch(getUserById(userData?.id));
+            setPasswordConfirmation(true);
+            seterrorConfirmation(false);
+            setoldPassword("");
+            setNewPassword("");
+            setconfirmPassword("");
+          })
+          .catch((e) => {
+            console.log(e?.response?.data?.err, "error");
+            setloading(false);
+            seterrorConfirmation(true);
+            seterrorMsg("Something went wrong.");
+          });
+      } else {
         setloading(false);
         seterrorConfirmation(true);
-        seterrorMsg('New Password & Confirm Password Mismatched.')
-
+        seterrorMsg("New Password & Confirm Password Mismatched.");
       }
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
       <LinearGradient
         colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
         style={gradient}
@@ -179,6 +185,12 @@ const Profile = () => {
         onPress={() => setconfirmation(false)}
       />
       <Snack
+        visible={passwordConfirmation}
+        title="Password Updated Successfully"
+        error={false}
+        onPress={() => setPasswordConfirmation(false)}
+      />
+      <Snack
         visible={errorConfirmation}
         title={errorMsg}
         error={true}
@@ -190,68 +202,23 @@ const Profile = () => {
         backPress={() => navigation.goBack()}
       />
 
-      <ScrollView style={{ marginVertical: 40 }}>
-        {/* <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={{ flex: 0.15 }}>
-            <Image
-              source={
-                userData?.avatar
-                  ? { uri: userData?.avatar }
-                  : require("../../../assets/icons/user.png")
-              }
-              style={{
-                height: 100,
-                width: 90,
-                borderRadius: 6,
-                objectFit: "contain",
-              }}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 12,
-              justifyContent: "center",
-              alignItems: "center",
-              padding: 18,
-              flexDirection: "row",
-              flex: 0.65,
-            }}
-            onPress={pickImage}
-          >
-            <Image
-              source={require("../../../assets/icons/upload.png")}
-              style={{ height: 90, width: 90 }}
-            />
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 50 }}
+        style={{ marginTop: 10 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View>
+          {errorConfirmation && (
             <Text
               style={{
-                color: colors.textClr,
-                fontSize: 14,
-                // fontFamily: "FiraSans_700Bold",
+                marginTop: 25,
+                color: "red",
               }}
             >
-              Upload Picture
+              {errorMsg || "An error occured"}
             </Text>
-          </TouchableOpacity>
-        </View> */}
-
-        <View>
-          {/* <CustomInput
-            placeholder="Full Name"
-            value={fullName}
-            setValue={setfullName}
-            noCap={true}
-            Icon={MaterialIcons}
-            iconName="person-outline"
-          /> */}
-
+          )}
           <CustomInput
             placeholder="Email"
             value={email}
@@ -274,7 +241,7 @@ const Profile = () => {
 
         <View>
           <View style={styles.header}>
-              <Text style={styles.headerText}>Update Password</Text>
+            <Text style={styles.headerText}>Update Password</Text>
           </View>
           <CustomPasswordInput
             placeholder="Old Password"
@@ -288,7 +255,6 @@ const Profile = () => {
             placeholder="New Password"
             value={newPassword}
             setValue={setNewPassword}
-            
             noCap={true}
             Icon={MaterialCommunityIcons}
             iconName=""
@@ -297,16 +263,18 @@ const Profile = () => {
             placeholder="Confirm Password"
             value={confirmPassword}
             setValue={setconfirmPassword}
-            
             noCap={true}
             Icon={MaterialCommunityIcons}
             iconName="password"
           />
-
         </View>
       </ScrollView>
-  
-      <View style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}>
+
+      <View
+        style={{
+          marginBottom: 20,
+        }}
+      >
         <CustomBtn text="Update" onPress={UpdateUser} />
       </View>
     </KeyboardAvoidingView>
