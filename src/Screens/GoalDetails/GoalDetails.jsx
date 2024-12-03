@@ -206,6 +206,7 @@ const GoalDetails = ({ route }) => {
         {type === "Form" && (
           <>
             <Text style={styles.formText}>{activityDetail?.form_name}</Text>
+            <Text style={styles.formText}>{activityDetail?.documentTwo}</Text>
             {activityDetail?.questions?.map((question, index) => {
               return (
                 <FormOptions
