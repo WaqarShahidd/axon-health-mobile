@@ -11,7 +11,6 @@ import React, { useEffect, useState } from "react";
 import { colors, gradient } from "../../theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../../components/Header";
-import { PieChart } from "react-native-chart-kit";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 import { useSelector } from "react-redux";
@@ -95,114 +94,6 @@ const Insights = () => {
       .catch((e) => {
         console.log(e);
       });
-  };
-
-  const chartConfig = {
-    backgroundColor: "#e26a00",
-    backgroundGradientFrom: "#fb8c00",
-    backgroundGradientTo: "#ffa726",
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {
-      borderRadius: 16,
-    },
-    propsForDots: {
-      r: "6",
-      strokeWidth: "2",
-      stroke: "#ffa726",
-    },
-  };
-
-  const renderItem = () => {
-    return (
-      <>
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartHeader}>Daily Check-Ins Questions: </Text>
-          <PieChart
-            data={dailyCheckInQues}
-            width={screenWidth * 1.5}
-            height={220}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            absolute
-            hasLegend={false}
-          />
-          <View style={styles.legendContainer}>
-            {dailyCheckInQues?.map((item, index) => (
-              <View key={index} style={styles.legendItem}>
-                <View
-                  style={[
-                    styles.legend,
-                    {
-                      backgroundColor: item.color,
-                    },
-                  ]}
-                />
-                <Text>{item.name}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartHeader}>Daily Activities: </Text>
-          <PieChart
-            data={dailyActivityData}
-            width={screenWidth * 1.5}
-            height={220}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            absolute
-            hasLegend={false}
-          />
-          <View style={styles.legendContainer}>
-            {dailyActivityData?.map((item, index) => (
-              <View key={index} style={styles.legendItem}>
-                <View
-                  style={[
-                    styles.legend,
-                    {
-                      backgroundColor: item.color,
-                    },
-                  ]}
-                />
-                <Text>{item.name}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-        <View style={styles.chartContainer}>
-          <Text style={styles.chartHeader}>Daily Assessment Forms: </Text>
-          <PieChart
-            data={formData}
-            width={screenWidth * 1.5}
-            height={220}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            absolute
-            hasLegend={false}
-          />
-          <View style={styles.legendContainer}>
-            {formData?.map((item, index) => (
-              <View key={index} style={styles.legendItem}>
-                <View
-                  style={[
-                    styles.legend,
-                    {
-                      backgroundColor: item.color,
-                    },
-                  ]}
-                />
-                <Text>{item.name}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      </>
-    );
   };
 
   const [doctor, setdoctor] = useState({});
@@ -396,7 +287,6 @@ const Insights = () => {
             }}
           />
         </View>
-        {/* {renderItem()} */}
       </ScrollView>
     </View>
   );

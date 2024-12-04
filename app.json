@@ -4,6 +4,7 @@
     "slug": "axon-health-mobile",
     "version": "1.0.4",
     "orientation": "portrait",
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -33,7 +34,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [],
+    "plugins": ["expo-font"],
     "extra": {
       "eas": {
         "projectId": "582f8eab-8756-45e8-b53c-68030dcefd2b"

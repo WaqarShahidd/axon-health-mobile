@@ -178,7 +178,7 @@ const Profile = () => {
       />
 
       <Spinner visible={loading} />
-      <Snack
+      {/* <Snack
         visible={confirmation}
         title="Profile Updated Successfully"
         error={false}
@@ -195,7 +195,7 @@ const Profile = () => {
         title={errorMsg}
         error={true}
         onPress={() => seterrorConfirmation(false)}
-      />
+      /> */}
 
       <DetailScreenHeader
         title="Settings"

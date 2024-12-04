@@ -2,7 +2,6 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useRef, useState } from "react";
 import { colors } from "../theme/theme";
 import { AntDesign, FontAwesome6 } from "@expo/vector-icons";
-import { Divider, Menu } from "react-native-paper";
 
 const DetailScreenHeader = ({
   title,

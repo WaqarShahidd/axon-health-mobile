@@ -57,12 +57,12 @@ const ForgotPassword = () => {
       style={{ flex: 1, backgroundColor: "#fff" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Snack
+      {/* <Snack
         visible={confirmation}
         title="Reset Password Link has been provided to your email."
         error={false}
         onPress={() => setconfirmation(false)}
-      />
+      /> */}
       <ScrollView
         style={{ marginHorizontal: 18 }}
         contentContainerStyle={{ paddingBottom: 20 }}

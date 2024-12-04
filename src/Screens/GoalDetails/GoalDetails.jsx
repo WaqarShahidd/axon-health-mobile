@@ -170,6 +170,8 @@ const GoalDetails = ({ route }) => {
     }
   }, []);
 
+  console.log(type, "type");
+
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <LinearGradient
@@ -182,7 +184,7 @@ const GoalDetails = ({ route }) => {
         backPress={() => navigation.goBack()}
       />
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-        {(type === "Daily Activity" || "Daily Check-In Questions") && (
+        {(type === "Daily Activity" || type === "Daily Check-In Questions") && (
           <>
             <Text style={styles.goalText}>{activityDetail?.activityName}</Text>
             <View style={styles.inputContainer}>
@@ -205,8 +207,10 @@ const GoalDetails = ({ route }) => {
 
         {type === "Form" && (
           <>
-            <Text style={styles.formText}>{activityDetail?.form_name}</Text>
-            <Text style={styles.formText}>{activityDetail?.documentTwo}</Text>
+            <Text style={styles.formHeading}>{activityDetail?.form_name}</Text>
+            <Text style={styles.parentQuestion}>
+              {activityDetail?.documentTwo}
+            </Text>
             {activityDetail?.questions?.map((question, index) => {
               return (
                 <FormOptions
@@ -274,9 +278,20 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     color: colors.textClr,
-    marginTop: -40,
+    marginTop: 30,
   },
-
+  formHeading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: colors.textClr,
+    marginTop: 20,
+  },
+  parentQuestion: {
+    fontSize: 18,
+    color: colors.textClr,
+    marginTop: 20,
+    fontWeight: "600",
+  },
   goalText: {
     fontSize: 24,
     fontWeight: "bold",

@@ -16,7 +16,7 @@ import { CustomInput, CustomTextArea } from "../../components/CustomInput";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import CustomBtn from "../../components/CustomBtn";
-import { Button, Divider, Menu, Snackbar } from "react-native-paper";
+// import { Button, Divider, Menu, Snackbar } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 
 const FormView = () => {
@@ -50,7 +50,7 @@ const FormView = () => {
         paddingTop: "15%",
       }}
     >
-      <Snackbar
+      {/* <Snackbar
         visible={snackbarVisible}
         onDismiss={onDismissSnackBar}
         style={{ backgroundColor: "#fff" }}
@@ -95,7 +95,7 @@ const FormView = () => {
             <AntDesign name="close" size={20} color={colors.secondary} />
           </TouchableOpacity>
         </View>
-      </Snackbar>
+      </Snackbar> */}
       <LinearGradient
         colors={["rgba(255,255,255,1)", "rgba(232,241,250,0.5)"]}
         style={gradient}
@@ -107,7 +107,7 @@ const FormView = () => {
         moreOptionsFunc={openMenu}
       />
 
-      <Menu
+      {/* <Menu
         visible={visible}
         onDismiss={closeMenu}
         anchor={{ x: containerWidth - 26, y: 100 }}
@@ -127,7 +127,7 @@ const FormView = () => {
           title="Download Form"
           style={{ backgroundColor: "white", maxWidth: "90%" }}
         />
-      </Menu>
+      </Menu> */}
 
       <ScrollView
         contentContainerStyle={{

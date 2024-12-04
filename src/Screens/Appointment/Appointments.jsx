@@ -13,7 +13,6 @@ import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import CustomBtn from "../../components/CustomBtn";
-import DropDownPicker from "react-native-dropdown-picker";
 import axios from "axios";
 import { BASE_URL } from "../../constants/config";
 import moment from "moment";
@@ -126,18 +125,6 @@ const Appointments = () => {
             >
               Clear All
             </Text>
-
-            {/* <DropDownPicker
-              items={items}
-              defaultValue={selectedValue}
-              containerStyle={{ height: 40 }}
-              style={{ backgroundColor: "#fafafa" }}
-              itemStyle={{
-                justifyContent: "flex-start",
-              }}
-              dropDownStyle={{ backgroundColor: "#fafafa" }}
-              onChangeItem={(item) => setSelectedValue(item.value)}
-            /> */}
           </View>
           <View
             style={{ flex: 1, justifyContent: "flex-end", marginBottom: 20 }}
