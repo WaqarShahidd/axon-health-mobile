@@ -98,15 +98,15 @@ const Profile = () => {
   };
 
   const UpdateUser = async () => {
-    setloading(true);
     seterrorConfirmation(false);
+    console.log(userData?.email, email, "email", userData);
     if (userData?.email !== email || userData.mobile !== mobile) {
+      setloading(true);
       await axios
         .post(
           `${BASE_URL}/user/updateUser`,
           {
             userId: userData?.id,
-            name: fullName,
             mobile: mobile,
             email: email,
             avatar: avatar,
@@ -119,6 +119,7 @@ const Profile = () => {
           console.log(res.data, "update user");
           setloading(false);
           dispatch(getUserById(userData?.id));
+          navigation.goBack();
           setconfirmation(true);
           seterrorConfirmation(false);
         })
@@ -147,6 +148,7 @@ const Profile = () => {
             console.log(res.data, "password update");
             setloading(false);
             dispatch(getUserById(userData?.id));
+            navigation.goBack();
             setPasswordConfirmation(true);
             seterrorConfirmation(false);
             setoldPassword("");
